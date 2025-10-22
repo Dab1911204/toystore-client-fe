@@ -1,103 +1,105 @@
-import Link from 'next/link'
-import Dropdownone from './Dropdownone'
-import Dropdowntwo from './Dropdowntwo'
-import Image from 'next/image'
+import React from "react";
+import HeroCarousel from "./HeroCarousel";
+import HeroFeature from "./HeroFeature";
+import Image from "next/image";
 
-const Banner = () => {
+const Hero = () => {
   return (
-    <section id='Home' className='bg-banner-image pt-28 pb-20'>
-      <div className='relative px-6 lg:px-8'>
-        <div className='container'>
-          <div className='flex flex-col gap-4 text-center'>
-            <h1 className='leading-tight font-bold tracking-tight max-w-4xl mx-auto'>
-              Advance your engineering skills with our courses
-            </h1>
-            <p className='text-lg leading-8 text-black'>
-              Build skills with our courses and mentor from world-class
-              companies.
-            </p>
-            <div className='backdrop-blur-md bg-white/30 border border-white/30 rounded-lg shadow-lg p-6 w-fit mx-auto'>
-              <div className='flex items-center justify-center gap-8'>
-                <div className='hidden sm:block -space-x-2 overflow-hidden'>
-                  <Image
-                    className='inline-block h-12 w-12 rounded-full ring-2 ring-white'
-                    src='https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                    alt='img1'
-                    width={12}
-                    height={12}
-                  />
+    <section className="overflow-hidden pb-10 lg:pb-12.5 xl:pb-15 pt-57.5 sm:pt-45 lg:pt-30 xl:pt-51.5 bg-[#E5EAF4]">
+      <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
+        <div className="flex flex-wrap gap-5">
+          <div className="xl:max-w-[757px] w-full">
+            <div className="relative z-1 rounded-[10px] bg-white overflow-hidden">
+              {/* <!-- bg shapes --> */}
+              <Image
+                src="/images/hero/hero-bg.png"
+                alt="hero bg shapes"
+                className="absolute right-0 bottom-0 -z-1"
+                width={534}
+                height={520}
+              />
 
-                  <Image
-                    className='inline-block h-12 w-12 rounded-full ring-2 ring-white'
-                    src='https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                    alt='img2'
-                    width={12}
-                    height={12}
-                  />
-                  <Image
-                    className='inline-block h-12 w-12 rounded-full ring-2 ring-white'
-                    src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80'
-                    alt='img3'
-                    width={12}
-                    height={12}
-                  />
-                  <Image
-                    className='inline-block h-12 w-12 rounded-full ring-2 ring-white'
-                    src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                    alt='img4'
-                    width={12}
-                    height={12}
-                  />
-                  <Image
-                    className='inline-block h-12 w-12 rounded-full ring-2 ring-white'
-                    src='https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                    alt='img5'
-                    width={12}
-                    height={12}
-                  />
-                </div>
-                <div>
-                  <div className='flex justify-center sm:justify-start'>
-                    <h3 className='text-2xl font-semibold mr-2'>4.6</h3>
-                    <Image
-                      src={'/images/banner/Stars.svg'}
-                      alt='stars-icon'
-                      width={32}
-                      height={32}
-                      className='w-[60%]'
-                    />
-                  </div>
-                  <div>
-                    <h3 className='text-sm'>Rated by 25k on google.</h3>
-                  </div>
-                </div>
-              </div>
+              <HeroCarousel />
             </div>
           </div>
 
-          {/* DROPDOWN BUTTONS */}
+          <div className="xl:max-w-[393px] w-full">
+            <div className="flex flex-col sm:flex-row xl:flex-col gap-5">
+              <div className="w-full relative rounded-[10px] bg-white p-4 sm:p-7.5">
+                <div className="flex items-center gap-14">
+                  <div>
+                    <h2 className="max-w-[153px] font-semibold text-dark text-xl mb-20">
+                      <a href="#"> iPhone 14 Plus & 14 Pro Max </a>
+                    </h2>
 
-          <div className='mx-auto max-w-4xl mt-12 p-6 lg:max-w-4xl lg:px-8 bg-white rounded-lg boxshadow'>
-            <div className='grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-8 xl:gap-x-8'>
-              <div className='col-span-3'>
-                <Dropdownone />
+                    <div>
+                      <p className="font-medium text-dark-4 text-custom-sm mb-1.5">
+                        limited time offer
+                      </p>
+                      <span className="flex items-center gap-3">
+                        <span className="font-medium text-heading-5 text-red">
+                          $699
+                        </span>
+                        <span className="font-medium text-2xl text-dark-4 line-through">
+                          $999
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Image
+                      src="/images/hero/hero-02.png"
+                      alt="mobile image"
+                      width={123}
+                      height={161}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className='col-span-3'>
-                <Dropdowntwo />
+              <div className="w-full relative rounded-[10px] bg-white p-4 sm:p-7.5">
+                <div className="flex items-center gap-14">
+                  <div>
+                    <h2 className="max-w-[153px] font-semibold text-dark text-xl mb-20">
+                      <a href="#"> Wireless Headphone </a>
+                    </h2>
+
+                    <div>
+                      <p className="font-medium text-dark-4 text-custom-sm mb-1.5">
+                        limited time offer
+                      </p>
+                      <span className="flex items-center gap-3">
+                        <span className="font-medium text-heading-5 text-red">
+                          $699
+                        </span>
+                        <span className="font-medium text-2xl text-dark-4 line-through">
+                          $999
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Image
+                      src="/images/hero/hero-01.png"
+                      alt="mobile image"
+                      width={123}
+                      height={161}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className='col-span-3 sm:col-span-2 mt-2'>
-                <Link href={'/#courses-section'}>
-                  <button className='bg-primary w-full hover:bg-transparent hover:text-primary duration-300 border border-primary text-white font-bold py-4 px-3 rounded-sm hover:cursor-pointer'>
-                    Start
-                  </button>
-                </Link>
-              </div>
+
+              
             </div>
           </div>
         </div>
       </div>
-    </section>
-  )
-}
 
-export default Banner
+      {/* <!-- Hero features --> */}
+      <HeroFeature />
+    </section>
+  );
+};
+
+export default Hero;

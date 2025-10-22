@@ -1,10 +1,7 @@
-export type SubmenuItem = {
-  label: string
-  href: string
-}
-
-export type HeaderItem = {
-  label: string
-  href: string
-  submenu?: SubmenuItem[]
-}
+export type Menu = {
+  id: number;
+  title: string;
+  path?: string;
+  newTab: boolean;
+  submenu?: Menu[];
+};

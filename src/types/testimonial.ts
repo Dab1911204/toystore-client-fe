@@ -1,7 +1,6 @@
-export type TestimonialType = {
-  profession: string
-  name: string
-  imgSrc: string
-  starimg: string
-  detail: string
-}
+export type Testimonial = {
+  review: string;
+  authorName: string;
+  authorRole: string;
+  authorImg: string;
+};
