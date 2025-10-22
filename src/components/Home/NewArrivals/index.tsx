@@ -1,10 +1,64 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import ProductItem from "@/components/Common/ProductItem";
-import shopData from "@/components/Shop/shopData";
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import ProductItem from '@/components/Common/ProductItem';
+import { Product } from '@/types/product';
+import { ProductService } from '@/services/productServices';
 
 const NewArrival = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setIsLoading(true);
+        const PageNumber = 1;
+        const PageSize = 12;
+        const response = await ProductService.getListProduct(
+          `/api/Product/client?Sorts=CreateOn&PageNumber=${PageNumber}&PageSize=${PageSize}`
+        );
+        console.log('response:', response);
+        if (response.success && response.result?.items) {
+          setProducts(response.result.items);
+        } else {
+          setError('Không thể tải sản phẩm.');
+        }
+      } catch (err) {
+        setError('Đã xảy ra lỗi khi tải sản phẩm.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className="overflow-hidden pt-15">
+        <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
+          <div className="flex justify-center">
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="overflow-hidden pt-15">
+        <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
+          <div className="text-red-500 text-center">{error}</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="overflow-hidden pt-15">
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -31,10 +85,10 @@ const NewArrival = () => {
                   strokeLinecap="round"
                 />
               </svg>
-              This Week’s
+              Sản phẩm nổi bật
             </span>
-            <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-              New Arrivals
+            <h2 className="font-semibold text-xl xl:text-heading-5 text-dark capitalize">
+              Hàng mới về
             </h2>
           </div>
 
@@ -42,13 +96,13 @@ const NewArrival = () => {
             href="/shop-with-sidebar"
             className="inline-flex font-medium text-custom-sm py-2.5 px-7 rounded-md border-gray-3 border bg-gray-1 text-dark ease-out duration-200 hover:bg-dark hover:text-white hover:border-transparent"
           >
-            View All
+            Xem tất cả
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-7.5 gap-y-9">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-x-7.5 gap-y-9">
           {/* <!-- New Arrivals item --> */}
-          {shopData.map((item, key) => (
+          {products.map((item, key) => (
             <ProductItem item={item} key={key} />
           ))}
         </div>
