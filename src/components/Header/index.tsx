@@ -142,15 +142,6 @@ const Header = () => {
                   fill="#3C50E0"
                 />
               </svg>
-
-              <div>
-                <span className="block text-2xs text-dark-4 uppercase">
-                  24/7 SUPPORT
-                </span>
-                <p className="font-medium text-custom-sm text-dark">
-                  (+965) 7492-3477
-                </p>
-              </div>
             </div>
 
             {/* <!-- divider --> */}
