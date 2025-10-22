@@ -60,7 +60,7 @@ const request = async <T>(
   path: string,
   options?: CustomOption
 ): Promise<T> => {
-  const requireAuth = options?.requireAuth ?? true
+  const requireAuth = options?.requireAuth ?? false
   const requireManager = options?.requireManager ?? false
 
   // --- Client vs Server ---
