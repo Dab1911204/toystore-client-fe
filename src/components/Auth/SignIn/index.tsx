@@ -21,12 +21,12 @@ const Signin = () => {
       console.log(response)
       const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000)
       if (response.success) {
+        localStorage.setItem('user', JSON.stringify(response.result.user));
         await AuthService.auth({
           roleUser: response.result.user.roles[0],
           sessionToken: response.result.accessToken,
           expiresAt: expiresAt.toISOString(),
         })
-
         // Redirect to home page
         router.push('/');
       } else {

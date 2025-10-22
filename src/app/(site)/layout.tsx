@@ -15,17 +15,33 @@ import PreviewSliderModal from "@/components/Common/PreviewSlider";
 
 import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
+import { AppProvider } from "../context/AppContext";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi" suppressHydrationWarning>
       <body>
+<<<<<<< HEAD
         <ReduxProvider>
           <ModalProvider>
             <CartModalProvider>
               <PreviewSliderProvider>
                 <PreLoader />
                 <Header />
+=======
+        {loading ? (
+          <PreLoader />
+        ) : (
+          <>
+            <ReduxProvider>
+              <CartModalProvider>
+                <ModalProvider>
+                  <PreviewSliderProvider>
+                    <AppProvider>
+                      <Header />
+                    </AppProvider>
+                    {children}
+>>>>>>> 3323cab (sadada)
 
                 {children}
 
