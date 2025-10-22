@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import Loader from "@/app/components/Common/Loader";
+import Loader from "@/components/Common/Loader";
 import Link from "next/link";
 import Image from "next/image";
 

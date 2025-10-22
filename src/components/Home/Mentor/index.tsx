@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { MentorType } from '@/app/types/mentor'
+import { MentorType } from '@/types/mentor'
 import MentorSkeleton from '../../Skeleton/Mentor'
 
 const Mentor = () => {
@@ -41,35 +41,35 @@ const Mentor = () => {
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6  xl:gap-8'>
           {loading
             ? Array.from({ length: 6 }).map((_, i) => (
-                <MentorSkeleton key={i} />
-              ))
+              <MentorSkeleton key={i} />
+            ))
             : mentor.map((item, index) => (
-                <div key={index} className='group relative shadow-lg'>
-                  <div className='min-h-80 w-full overflow-hidden rounded-lg bg-gray-200 lg:h-80'>
-                    <Image
-                      src={item.imageSrc}
-                      alt={item.imageAlt}
-                      width={700}
-                      height={700}
-                      className='h-full w-full object-cover object-center lg:h-full lg:w-full '
-                    />
-                  </div>
-                  <div className='my-4 flex justify-center '>
-                    <div>
-                      <div className='border border-white rounded-lg -mt-8 bg-white p-2 shadow-mentorShadow flex items-center justify-center'>
-                        <Link
-                          href='/'
-                          className='text-sm text-gray-700 text-center'>
-                          {item.name}
-                        </Link>
-                      </div>
-                      <p className='mt-3 text-2xl font-semibold text-black/80 text-center'>
-                        {item.color}
-                      </p>
+              <div key={index} className='group relative shadow-lg'>
+                <div className='min-h-80 w-full overflow-hidden rounded-lg bg-gray-200 lg:h-80'>
+                  <Image
+                    src={item.imageSrc}
+                    alt={item.imageAlt}
+                    width={700}
+                    height={700}
+                    className='h-full w-full object-cover object-center lg:h-full lg:w-full '
+                  />
+                </div>
+                <div className='my-4 flex justify-center '>
+                  <div>
+                    <div className='border border-white rounded-lg -mt-8 bg-white p-2 shadow-mentorShadow flex items-center justify-center'>
+                      <Link
+                        href='/'
+                        className='text-sm text-gray-700 text-center'>
+                        {item.name}
+                      </Link>
                     </div>
+                    <p className='mt-3 text-2xl font-semibold text-black/80 text-center'>
+                      {item.color}
+                    </p>
                   </div>
                 </div>
-              ))}
+              </div>
+            ))}
         </div>
       </div>
     </section>

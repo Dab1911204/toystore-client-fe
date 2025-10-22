@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Logo from './Logo'
-import HeaderLink from '../Header/Navigation/HeaderLink'
-import MobileHeaderLink from '../Header/Navigation/MobileHeaderLink'
-import Signin from '@/app/components/Auth/SignIn'
-import SignUp from '@/app/components/Auth/SignUp'
+import HeaderLink from './Navigation/HeaderLink'
+import MobileHeaderLink from './Navigation/MobileHeaderLink'
+import Signin from '@/components/Auth/SignIn'
+import SignUp from '@/components/Auth/SignUp'
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { HeaderItem } from '@/app/types/menu'
+import { HeaderItem } from '@/types/menu'
 
 const Header: React.FC = () => {
   const [headerData, setHeaderData] = useState<HeaderItem[]>([])
@@ -81,9 +81,8 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 z-40 w-full transition-all duration-300 ${
-        sticky ? ' shadow-lg bg-white py-4' : 'shadow-none py-4'
-      }`}>
+      className={`fixed top-0 z-40 w-full transition-all duration-300 ${sticky ? ' shadow-lg bg-white py-4' : 'shadow-none py-4'
+        }`}>
       <div>
         <div className='container mx-auto max-w-7xl px-4 flex items-center justify-between'>
           <Logo />
@@ -162,9 +161,8 @@ const Header: React.FC = () => {
         )}
         <div
           ref={mobileMenuRef}
-          className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${
-            navbarOpen ? 'translate-x-0' : 'translate-x-full'
-          } z-50`}>
+          className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${navbarOpen ? 'translate-x-0' : 'translate-x-full'
+            } z-50`}>
           <div className='flex items-center justify-between p-4'>
             <h2 className='text-lg font-bold text-midnight_text'>
               <Logo />

@@ -1,12 +1,12 @@
 import React from 'react'
-import Hero from '@/app/components/Home/Hero'
-import Companies from '@/app/components/Home/Companies'
-import NamesList from '@/app/components/Home/Courses'
-import Mentor from '@/app/components/Home/Mentor'
-import Testimonial from '@/app/components/Home/Testimonial'
-import Newsletter from '@/app/components/Home/Newsletter'
+import Hero from '@/components/Home/Hero'
+import Companies from '@/components/Home/Companies'
+import NamesList from '@/components/Home/Courses'
+import Mentor from '@/components/Home/Mentor'
+import Testimonial from '@/components/Home/Testimonial'
+import Newsletter from '@/components/Home/Newsletter'
 import { Metadata } from 'next'
-import ContactForm from './components/Contact/Form'
+import ContactForm from '../components/Contact/Form'
 export const metadata: Metadata = {
   title: 'Si Educational',
 }

@@ -23,9 +23,8 @@ const HeaderLink: React.FC<{ item: HeaderItem }> = ({ item }) => {
       onMouseLeave={handleMouseLeave}>
       <Link
         href={item.href}
-        className={`text-base flex font-medium hover:text-primary capitalized  ${
-          path === item.href ? 'text-primary ' : 'text-black'
-        }`}>
+        className={`text-base flex font-medium hover:text-primary capitalized  ${path === item.href ? 'text-primary ' : 'text-black'
+          }`}>
         {item.label}
         {item.submenu && (
           <svg
@@ -53,11 +52,10 @@ const HeaderLink: React.FC<{ item: HeaderItem }> = ({ item }) => {
             <Link
               key={index}
               href={subItem.href}
-              className={`block px-4 py-2   ${
-                path === subItem.href
-                  ? 'bg-primary text-white'
-                  : 'text-black dark:text-white hover:bg-primary'
-              }`}>
+              className={`block px-4 py-2   ${path === subItem.href
+                ? 'bg-primary text-white'
+                : 'text-black dark:text-white hover:bg-primary'
+                }`}>
               {subItem.label}
             </Link>
           ))}
