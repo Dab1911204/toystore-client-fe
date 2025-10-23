@@ -1,54 +1,34 @@
 "use client";
 import React from "react";
-import Image from "next/image";
-import { Product } from "@/types/product";
 import { useModalContext } from "@/app/context/QuickViewModalContext";
-import { updateQuickView } from "@/redux/features/quickView-slice";
-import { addItemToCart } from "@/redux/features/cart-slice";
-import { addItemToWishlist } from "@/redux/features/wishlist-slice";
-import { updateproductDetails } from "@/redux/features/product-details";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
 import Link from "next/link";
+import Image from "next/image";
 
-const ProductItem = ({ item }: { item: Product }) => {
+const SingleGridItem = ({ item }: { item: any }) => {
   const { openModal } = useModalContext();
 
-  const dispatch = useDispatch<AppDispatch>();
-
   // update the QuickView state
-  const handleQuickViewUpdate = () => {
-    dispatch(updateQuickView({ ...item }));
-  };
+  const handleQuickViewUpdate = () => { };
 
   // add to cart
-  const handleAddToCart = () => {
-    dispatch(
-      addItemToCart({
-        ...item,
-        quantity: 1,
-      })
-    );
-  };
+  const handleAddToCart = () => { };
 
-  const handleItemToWishList = () => {
-    dispatch(
-      addItemToWishlist({
-        ...item,
-        status: "available",
-        quantity: 1,
-      })
-    );
-  };
-
-  const handleProductDetails = () => {
-    dispatch(updateproductDetails({ ...item }));
-  };
+  const handleItemToWishList = () => { };
 
   return (
     <div className="group">
-      <div className="relative overflow-hidden flex items-center justify-center rounded-lg bg-[#F6F7FB] min-h-[270px] mb-4">
-        <Image src={item.imgs.previews[0]} alt="" width={250} height={250} />
+      <div className="relative overflow-hidden flex items-center justify-center rounded-lg bg-white shadow-1 min-h-[270px] mb-4">
+        {item.promotion && (
+          <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
+            -{item.promotion.discountPercent}%
+          </div>
+        )}
+        <Image
+          src={item.image[0] || "/images/noImage/error.png"}
+          alt={item.productName}
+          width={250}
+          height={250}
+        />
 
         <div className="absolute left-0 bottom-0 translate-y-full w-full flex items-center justify-center gap-2.5 pb-5 ease-linear duration-200 group-hover:translate-y-0">
           <button
@@ -56,7 +36,6 @@ const ProductItem = ({ item }: { item: Product }) => {
               openModal();
               handleQuickViewUpdate();
             }}
-            id="newOne"
             aria-label="button for quick view"
             className="flex items-center justify-center w-9 h-9 rounded-[5px] shadow-1 ease-out duration-200 text-dark bg-white hover:text-blue"
           >
@@ -87,13 +66,12 @@ const ProductItem = ({ item }: { item: Product }) => {
             onClick={() => handleAddToCart()}
             className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] bg-blue text-white ease-out duration-200 hover:bg-blue-dark"
           >
-            Add to cart
+            Thêm giỏ hàng
           </button>
 
           <button
             onClick={() => handleItemToWishList()}
             aria-label="button for favorite select"
-            id="favOne"
             className="flex items-center justify-center w-9 h-9 rounded-[5px] shadow-1 ease-out duration-200 text-dark bg-white hover:text-blue"
           >
             <svg
@@ -115,56 +93,35 @@ const ProductItem = ({ item }: { item: Product }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2.5 mb-2">
-        <div className="flex items-center gap-1">
-          <Image
-            src="/images/icons/icon-star.svg"
-            alt="star icon"
-            width={14}
-            height={14}
-          />
-          <Image
-            src="/images/icons/icon-star.svg"
-            alt="star icon"
-            width={14}
-            height={14}
-          />
-          <Image
-            src="/images/icons/icon-star.svg"
-            alt="star icon"
-            width={14}
-            height={14}
-          />
-          <Image
-            src="/images/icons/icon-star.svg"
-            alt="star icon"
-            width={14}
-            height={14}
-          />
-          <Image
-            src="/images/icons/icon-star.svg"
-            alt="star icon"
-            width={14}
-            height={14}
-          />
+      <div className="flex flex-col gap-2 mb-4">
+        {/* Nhà cung cấp */}
+        <div className="flex items-center gap-1 text-sm text-gray-500">
+          <span>Nhà cung cấp:</span>
+          <span className="font-medium text-gray-800">{item.supplier.name}</span>
         </div>
 
-        <p className="text-custom-sm">({item.reviews})</p>
+        {/* Danh mục */}
+        {item.category?.name && (
+          <div className="flex items-center gap-1 text-sm text-gray-500">
+            <span>Danh mục:</span>
+            <span className="font-medium text-gray-800">{item.category.name}</span>
+          </div>
+        )}
+
+        {/* Tiêu đề sản phẩm */}
+        <h3 className="font-medium text-gray-900 hover:text-blue-600 transition-colors duration-200">
+          <Link href="/shop-details">{item.productName}</Link>
+        </h3>
+
+        {/* Giá và số lượng */}
+        <div className="flex items-center gap-4 mt-1">
+          <span className="text-lg font-semibold text-red-600">${item.discountedPrice}</span>
+          <span className="text-sm text-gray-400 line-through">${item.price}</span>
+          <span className="text-sm text-gray-500">Số lượng: {item.stock}</span>
+        </div>
       </div>
-
-      <h3
-        className="font-medium text-dark ease-out duration-200 hover:text-blue mb-1.5"
-        onClick={() => handleProductDetails()}
-      >
-        <Link href="/shop-details"> {item.title} </Link>
-      </h3>
-
-      <span className="flex items-center gap-2 font-medium text-lg">
-        <span className="text-dark">${item.discountedPrice}</span>
-        <span className="text-dark-4 line-through">${item.price}</span>
-      </span>
     </div>
   );
 };
 
-export default ProductItem;
+export default SingleGridItem;
