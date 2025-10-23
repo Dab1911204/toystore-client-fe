@@ -1,11 +1,11 @@
 import { BlogItem } from "@/types/blogItem";
-
 const blogData: BlogItem[] = [
   {
     date: "Mar 27, 2022",
     views: 300000,
     title: "How to Start a Successful E-commerce Business",
     img: "/images/blog/blog-01.jpg",
+  
   },
   {
     date: "Mar 27, 2022",

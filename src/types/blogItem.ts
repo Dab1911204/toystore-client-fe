@@ -1,7 +1,8 @@
 export type BlogItem = {
+  id?:string,
   date: string;
-  views: number;
+  views?: number;
   title: string;
   img: string;
-  slug:string
+  slug?:string
 };

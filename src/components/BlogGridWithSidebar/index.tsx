@@ -1,55 +1,67 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../Common/Breadcrumb";
 import BlogItem from "../Blog/BlogItem";
-import blogData from "../BlogGrid/blogData";
 import SearchForm from "../Blog/SearchForm";
 import LatestPosts from "../Blog/LatestPosts";
-import LatestProducts from "../Blog/LatestProducts";
-import Categories from "../Blog/Categories";
-import shopData from "../Shop/shopData";
 import { blogService } from "@/services/blogServices";
 import { getFirstImageFromString } from "@/utils/format";
+import { motion } from "framer-motion"; // ✅ thêm hiệu ứng mềm mượt
 
-const BlogGridWithSidebar = async () => {
-  const categories = [
-    {
-      name: "Desktop",
-      products: 10,
-    },
-    {
-      name: "Laptop",
-      products: 12,
-    },
-    {
-      name: "Monitor",
-      products: 30,
-    },
-    {
-      name: "UPS",
-      products: 23,
-    },
-    {
-      name: "Phone",
-      products: 10,
-    },
-    {
-      name: "Watch",
-      products: 13,
-    },
-  ];
-  const getListBlog = await blogService.getListBlog('/api/News/Client');
-  const blogs = getListBlog?.result?.items || [];
+const BlogGridWithSidebar = () => {
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const pageSize = 4;
 
-  // Xử lý dữ liệu blog
-  const formattedBlogs = blogs.map((item: any) => ({
-    id: item.id,
-    title: item.title,
-    image: getFirstImageFromString(item.image),
-    date: new Date(item.createdOn).toLocaleDateString("vi-VN"),
-    author: item.createdbyStr || "Ẩn danh",
-    slug: item.slug,
-  }));
-  console.log('formattedBlogs', formattedBlogs);
+  //  Fetch API
+  const fetchBlogs = async (page: number, searchTerm = "") => {
+    try {
+      setLoading(true);
+      const query = `/api/News/Client?PageNumber=${page}&PageSize=${pageSize}${
+        searchTerm ? `&Search=${encodeURIComponent(searchTerm)}` : ""
+      }`;
+
+      const res = await blogService.getListBlog(query);
+      const data = res?.result;
+      const items = data?.items || [];
+
+      const formattedBlogs = items.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        image: getFirstImageFromString(item.image),
+        date: new Date(item.createdOn).toLocaleDateString("vi-VN"),
+        author: item.createdbyStr || "Ẩn danh",
+        slug: item.slug,
+      }));
+
+      setBlogs(formattedBlogs);
+      setTotalPages(data?.totalPages || 1);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Gọi API khi đổi trang hoặc keyword
+  useEffect(() => {
+    fetchBlogs(currentPage, keyword);
+  }, [currentPage, keyword]);
+
+  // Chuyển trang
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
+
+  // Nhận từ SearchForm
+  const handleSearch = (searchTerm: string) => {
+    setKeyword(searchTerm);
+    setCurrentPage(1); // reset về trang đầu
+  };
+
   return (
     <>
       <Breadcrumb title={"Bài viết"} pages={["Bài viết"]} />
@@ -57,222 +69,92 @@ const BlogGridWithSidebar = async () => {
       <section className="overflow-hidden py-20 bg-gray-2">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
           <div className="flex flex-col lg:flex-row gap-7.5">
-            {/* <!-- blog grid --> */}
+            {/* Blog grid */}
             <div className="lg:max-w-[770px] w-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-7.5">
-                {formattedBlogs.map((blog: any, key: any) => (
-                  <BlogItem
-                    blog={{
-                      img: blog.image,
-                      title: blog.title,  
-                      date: blog.date,
-                      views: 0,
-                      slug: blog.slug,
-                    }}
-                    key={key}
-                  />
-                ))}
-              </div>
-
-              {/* <!-- Blog Pagination Start --> */}
-              <div className="flex justify-center mt-15">
-                <div className="bg-white shadow-1 rounded-md p-2">
-                  <ul className="flex items-center">
-                    <li>
-                      <button
-                        id="paginationLeft"
-                        aria-label="button for pagination left"
-                        type="button"
-                        disabled
-                        className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px disabled:text-gray-4"
-                      >
-                        <svg
-                          className="fill-current"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M12.1782 16.1156C12.0095 16.1156 11.8407 16.0594 11.7282 15.9187L5.37197 9.45C5.11885 9.19687 5.11885 8.80312 5.37197 8.55L11.7282 2.08125C11.9813 1.82812 12.3751 1.82812 12.6282 2.08125C12.8813 2.33437 12.8813 2.72812 12.6282 2.98125L6.72197 9L12.6563 15.0187C12.9095 15.2719 12.9095 15.6656 12.6563 15.9187C12.4876 16.0312 12.347 16.1156 12.1782 16.1156Z"
-                            fill=""
-                          />
-                        </svg>
-                      </button>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] bg-blue text-white hover:text-white hover:bg-blue"
-                      >
-                        1
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        2
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        3
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        4
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        5
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        ...
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        10
-                      </a>
-                    </li>
-
-                    <li>
-                      <button
-                        id="paginationLeft"
-                        aria-label="button for pagination left"
-                        type="button"
-                        className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px] hover:text-white hover:bg-blue disabled:text-gray-4"
-                      >
-                        <svg
-                          className="fill-current"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.82197 16.1156C5.65322 16.1156 5.5126 16.0594 5.37197 15.9469C5.11885 15.6937 5.11885 15.3 5.37197 15.0469L11.2782 9L5.37197 2.98125C5.11885 2.72812 5.11885 2.33437 5.37197 2.08125C5.6251 1.82812 6.01885 1.82812 6.27197 2.08125L12.6282 8.55C12.8813 8.80312 12.8813 9.19687 12.6282 9.45L6.27197 15.9187C6.15947 16.0312 5.99072 16.1156 5.82197 16.1156Z"
-                            fill=""
-                          />
-                        </svg>
-                      </button>
-                    </li>
-                  </ul>
+              {loading ? (
+                <div className="text-center text-gray-500">Đang tải dữ liệu...</div>
+              ) : blogs.length === 0 ? (
+                //  Không tìm thấy bài viết nào
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="text-center py-20 bg-white rounded-xl shadow-sm"
+                >
+                  <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+                     Không tìm thấy bài viết nào phù hợp
+                  </h3>
+                  <p className="text-gray-500">
+                    Hãy thử lại với từ khóa khác nhé!
+                  </p>
+                </motion.div>
+              ) : (
+                //  Danh sách bài viết
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-7.5">
+                  {blogs.map((blog) => (
+                    <BlogItem
+                      key={blog.id}
+                      blog={{
+                        id: blog.id,
+                        img: blog.image,
+                        title: blog.title,
+                        date: blog.date,
+                        slug: blog.slug,
+                      }}
+                    />
+                  ))}
                 </div>
-              </div>
-              {/* <!-- Blog Pagination End --> */}
-            </div>
+              )}
 
-            {/* <!-- blog sidebar --> */}
-            <div className="lg:max-w-[370px] w-full">
-              {/* <!-- search box --> */}
-              <SearchForm />
+              {/*  Pagination */}
+              {!loading && blogs.length > 0 && totalPages > 1 && (
+                <div className="flex justify-center mt-10">
+                  <div className="bg-white shadow-1 rounded-md p-2">
+                    <ul className="flex items-center">
+                      <li>
+                        <button
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className="flex items-center justify-center w-8 h-9 rounded-[3px] hover:bg-blue hover:text-white disabled:text-gray-400"
+                        >
+                          &lt;
+                        </button>
+                      </li>
 
-              {/* <!-- Recent Posts box --> */}
-              <LatestPosts blogs={blogData} />
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <li key={i}>
+                          <button
+                            onClick={() => handlePageChange(i + 1)}
+                            className={`flex py-1.5 px-3.5 rounded-[3px] duration-200 ${
+                              currentPage === i + 1
+                                ? "bg-blue text-white"
+                                : "hover:bg-blue hover:text-white"
+                            }`}
+                          >
+                            {i + 1}
+                          </button>
+                        </li>
+                      ))}
 
-              {/* <!-- Latest Products box --> */}
-              <LatestProducts products={shopData} />
-
-              {/* <!-- Popular Category box --> */}
-              <Categories categories={categories} />
-
-              {/* <!-- Tags box --> */}
-              <div className="shadow-1 bg-white rounded-xl mt-7.5">
-                <div className="px-4 sm:px-6 py-4.5 border-b border-gray-3">
-                  <h2 className="font-medium text-lg text-dark">Tags</h2>
-                </div>
-
-                <div className="p-4 sm:p-6">
-                  <div className="flex flex-wrap gap-3.5">
-                    <a
-                      className="inline-flex hover:text-white border border-gray-3 py-2 px-4 rounded-md ease-out duration-200 hover:bg-blue hover:border-blue"
-                      href="#"
-                    >
-                      Desktop
-                    </a>
-
-                    <a
-                      className="inline-flex hover:text-white border border-gray-3 py-2 px-4 rounded-md ease-out duration-200 hover:bg-blue hover:border-blue"
-                      href="#"
-                    >
-                      Macbook
-                    </a>
-
-                    <a
-                      className="inline-flex hover:text-white border border-gray-3 py-2 px-4 rounded-md ease-out duration-200 hover:bg-blue hover:border-blue"
-                      href="#"
-                    >
-                      PC
-                    </a>
-
-                    <a
-                      className="inline-flex hover:text-white border border-gray-3 py-2 px-4 rounded-md ease-out duration-200 hover:bg-blue hover:border-blue"
-                      href="#"
-                    >
-                      Watch
-                    </a>
-
-                    <a
-                      className="inline-flex hover:text-white border border-gray-3 py-2 px-4 rounded-md ease-out duration-200 hover:bg-blue hover:border-blue"
-                      href="#"
-                    >
-                      USB Cable
-                    </a>
-
-                    <a
-                      className="inline-flex hover:text-white border border-gray-3 py-2 px-4 rounded-md ease-out duration-200 hover:bg-blue hover:border-blue"
-                      href="#"
-                    >
-                      Mouse
-                    </a>
-
-                    <a
-                      className="inline-flex hover:text-white border border-gray-3 py-2 px-4 rounded-md ease-out duration-200 hover:bg-blue hover:border-blue"
-                      href="#"
-                    >
-                      Windows PC
-                    </a>
-
-                    <a
-                      className="inline-flex hover:text-white border border-gray-3 py-2 px-4 rounded-md ease-out duration-200 hover:bg-blue hover:border-blue"
-                      href="#"
-                    >
-                      Monitor
-                    </a>
+                      <li>
+                        <button
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          className="flex items-center justify-center w-8 h-9 rounded-[3px] hover:bg-blue hover:text-white disabled:text-gray-400"
+                        >
+                          &gt;
+                        </button>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-              </div>
+              )}
+            </div>
+
+            {/* Sidebar */}
+            <div className="lg:max-w-[370px] w-full">
+              <SearchForm onSearch={handleSearch} />
+              <LatestPosts />
             </div>
           </div>
         </div>
