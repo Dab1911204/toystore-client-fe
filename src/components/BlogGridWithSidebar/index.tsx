@@ -1,14 +1,16 @@
 import React from "react";
 import Breadcrumb from "../Common/Breadcrumb";
 import BlogItem from "../Blog/BlogItem";
-import blogData from "../BlogGrid/blogData"; 
-import SearchForm from "../Blog/SearchForm"; 
+import blogData from "../BlogGrid/blogData";
+import SearchForm from "../Blog/SearchForm";
 import LatestPosts from "../Blog/LatestPosts";
 import LatestProducts from "../Blog/LatestProducts";
 import Categories from "../Blog/Categories";
-import shopData from "../Shop/shopData"; 
- 
-const BlogGridWithSidebar = () => {
+import shopData from "../Shop/shopData";
+import { blogService } from "@/services/blogServices";
+import { getFirstImageFromString } from "@/utils/format";
+
+const BlogGridWithSidebar = async () => {
   const categories = [
     {
       name: "Desktop",
@@ -35,10 +37,22 @@ const BlogGridWithSidebar = () => {
       products: 13,
     },
   ];
+  const getListBlog = await blogService.getListBlog('/api/News/Client');
+  const blogs = getListBlog?.result?.items || [];
 
+  // Xử lý dữ liệu blog
+  const formattedBlogs = blogs.map((item: any) => ({
+    id: item.id,
+    title: item.title,
+    image: getFirstImageFromString(item.image),
+    date: new Date(item.createdOn).toLocaleDateString("vi-VN"),
+    author: item.createdbyStr || "Ẩn danh",
+    slug: item.slug,
+  }));
+  console.log('formattedBlogs', formattedBlogs);
   return (
     <>
-      <Breadcrumb title={"Blog Grid Sidebar"} pages={["blog grid sidebar"]} />
+      <Breadcrumb title={"Bài viết"} pages={["Bài viết"]} />
 
       <section className="overflow-hidden py-20 bg-gray-2">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -46,8 +60,17 @@ const BlogGridWithSidebar = () => {
             {/* <!-- blog grid --> */}
             <div className="lg:max-w-[770px] w-full">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-7.5">
-                {blogData.map((blog, key) => (
-                  <BlogItem blog={blog} key={key} />
+                {formattedBlogs.map((blog: any, key: any) => (
+                  <BlogItem
+                    blog={{
+                      img: blog.image,
+                      title: blog.title,  
+                      date: blog.date,
+                      views: 0,
+                      slug: blog.slug,
+                    }}
+                    key={key}
+                  />
                 ))}
               </div>
 

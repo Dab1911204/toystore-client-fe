@@ -3,4 +3,5 @@ export type BlogItem = {
   views: number;
   title: string;
   img: string;
+  slug:string
 };
