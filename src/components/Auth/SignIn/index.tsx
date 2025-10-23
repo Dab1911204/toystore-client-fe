@@ -1,4 +1,5 @@
 "use client"
+import { useAppContext } from "@/app/context/AppContext";
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import { AuthService } from "@/services/authServices";
 import Link from "next/link";
@@ -11,6 +12,7 @@ const Signin = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setUser } = useAppContext();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -27,6 +29,7 @@ const Signin = () => {
           sessionToken: response.result.accessToken,
           expiresAt: expiresAt.toISOString(),
         })
+        setUser(response.result.user);
         // Redirect to home page
         router.push('/');
       } else {
