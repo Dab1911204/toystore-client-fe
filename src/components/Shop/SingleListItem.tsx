@@ -3,30 +3,32 @@ import React from "react";
 import { useModalContext } from "@/app/context/QuickViewModalContext";
 import Link from "next/link";
 import Image from "next/image";
+import { formatCurrency } from "@/utils/format"; // nếu bạn đã có utils format
 
 const SingleListItem = ({ item }: { item: any }) => {
   const { openModal } = useModalContext();
 
-  const handleQuickViewUpdate = () => {};
-  const handleAddToCart = () => {}
-  const handleItemToWishList = () =>{};
+  const handleQuickViewUpdate = () => { };
+  const handleAddToCart = () => { };
+  const handleItemToWishList = () => { };
 
-  // Tính % giảm giá
-  const discountPercentage =
-    item.price && item.discountedPrice
-      ? Math.round(((item.price - item.discountedPrice) / item.price) * 100)
-      : 0;
+  // Tính % giảm giá nếu có
+  const discountPercentage = item?.promotion?.discountPercent ? item.promotion.discountPercent : 0;
+
+  const priceProduct = discountPercentage > 0 ? item.price * (1 - discountPercentage / 100) : item.price;
 
   return (
     <div className="group rounded-lg bg-white shadow-1 mb-4 overflow-hidden flex flex-col sm:flex-row">
       {/* Ảnh sản phẩm + badge giảm giá */}
       <div className="relative w-full sm:w-[270px] flex items-center justify-center p-4 shadow-list overflow-hidden">
-          <div className="absolute top-2 left-2 bg-red-600 p-6 text-white bg-red text-xs font-bold px-2 py-1 rounded-md z-10">
-            -10%
+        {discountPercentage > 0 && (
+          <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
+            -{discountPercentage}%
           </div>
+        )}
 
         <Image
-          src={item.imgs.previews[0]}
+          src={item.imgs?.previews?.[0] || "/images/noImage/error.png"}
           alt={item.title}
           width={250}
           height={250}
@@ -37,32 +39,30 @@ const SingleListItem = ({ item }: { item: any }) => {
       <div className="flex-1 flex flex-col justify-between py-5 px-4 sm:px-7.5 lg:pl-11 lg:pr-12 gap-4">
         <div className="flex flex-col gap-2">
           <h3 className="font-medium text-dark hover:text-blue transition mb-1.5">
-            <Link href="/shop-details">{item.title}</Link>
+            <Link href={`/shop-details/${item.slug || ''}`}>{item.title}</Link>
           </h3>
 
           <div className="text-sm text-gray-500">
             Nhà cung cấp:{" "}
-            <span className="font-medium text-gray-800">
-              Nguyễn Đức Anh
-            </span>
+            <span className="font-medium text-gray-800">{item.supplier.name || 'Chưa có'}</span>
           </div>
 
           <div className="flex items-center gap-4 mt-1">
             <span className="text-lg font-semibold text-red-600">
-              ${item.discountedPrice}
+              {formatCurrency(priceProduct)}
             </span>
-            {item.price > item.discountedPrice && (
+            {discountPercentage > 0 && (
               <span className="text-sm text-gray-400 line-through">
-                ${item.price}
+                {formatCurrency(priceProduct)}
               </span>
             )}
-            <span className="text-sm text-gray-500">
-              Số lượng: 100
+            <span className={`text-sm ${item.quantity > 0 ? 'text-green-light' : 'text-red'}`}>
+              {item.quantity > 0 ? `Còn: ${item.quantity} sản phẩm` : 'Hết hàng'}
             </span>
           </div>
         </div>
 
-        {/* Nút thao tác luôn hiển thị */}
+        {/* Nút thao tác */}
         <div className="flex items-center gap-3 mt-3">
           <button
             onClick={() => {
@@ -97,9 +97,14 @@ const SingleListItem = ({ item }: { item: any }) => {
 
           <button
             onClick={handleAddToCart}
-            className="inline-flex font-medium text-sm py-[7px] px-5 rounded-[5px] bg-blue text-white hover:bg-blue-dark transition"
+            disabled={item.quantity <= 0}
+            className={`inline-flex font-medium text-sm py-[7px] px-5 rounded-[5px] transition 
+              ${item.quantity > 0
+                ? 'bg-blue text-white hover:bg-blue-light hover:scale-105'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-70'
+              }`}
           >
-            Add to cart
+            Thêm vào giỏ hàng
           </button>
 
           <button

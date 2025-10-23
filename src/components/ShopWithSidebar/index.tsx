@@ -229,7 +229,7 @@ const ShopWithSidebar = () => {
       }
     }
     fetchProducts();
-  }, [])
+  }, [currentPage, sort, pageSize, selectedCategories, priceRange])
 
   return (
     <>
