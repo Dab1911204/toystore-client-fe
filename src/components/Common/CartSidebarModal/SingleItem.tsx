@@ -1,27 +1,53 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
 import Image from "next/image";
+import { formatCurrency } from "@/utils/format";
+import { deleteCart } from "@/utils/cart";
 
-const SingleItem = ({ item, removeItemFromCart }) => {
-  const dispatch = useDispatch<AppDispatch>();
+const SingleItem = ({ item,onRemove  }) => {
+  const product = item.product;
 
-  const handleRemoveFromCart = () => {
-    dispatch(removeItemFromCart(item.id));
+  const handleRemoveFromCart = async () => {
+    await deleteCart(product.id);
+    onRemove(product.id)
   };
+
+  const discountPercentage = product?.promotion?.discountPercent
+    ? product.promotion.discountPercent
+    : 0;
+
+  const priceProduct =
+    discountPercentage > 0
+      ? product.price * (1 - discountPercentage / 100)
+      : product.price;
+
+  const totalPrice = priceProduct * item.quantity;
 
   return (
     <div className="flex items-center justify-between gap-5">
       <div className="w-full flex items-center gap-6">
         <div className="flex items-center justify-center rounded-[10px] bg-gray-3 max-w-[90px] w-full h-22.5">
-          <Image src={item.imgs?.thumbnails[0]} alt="product" width={100} height={100} />
+          <Image
+            src={product.image?.[0] || "/images/noImage/error.png"}
+            alt={product.name}
+            width={100}
+            height={100}
+            className="rounded-md object-cover"
+          />
         </div>
 
         <div>
           <h3 className="font-medium text-dark mb-1 ease-out duration-200 hover:text-blue">
-            <a href="#"> {item.title} </a>
+            <a href="#"> {product.name} </a>
           </h3>
-          <p className="text-custom-sm">Price: ${item.discountedPrice}</p>
+          <p className="text-custom-sm">
+            Giá: {formatCurrency(priceProduct)}{" "}
+            <span className="text-gray-500 ml-1">
+              × {item.quantity}
+            </span>
+          </p>
+          <p className="text-custom-sm font-medium text-blue">
+            Tổng: {formatCurrency(totalPrice)}
+          </p>
         </div>
       </div>
 

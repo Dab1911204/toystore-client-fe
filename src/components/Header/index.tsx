@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { menuData } from './menuData';
-import Dropdown from './Dropdown';
-import { useAppSelector } from '@/redux/store';
+import Dropdown from './Dropdown'
 import { toast, Slide } from 'react-toastify';
 import { useCartModalContext } from '@/app/context/CartSidebarModalContext';
 import { useAppContext } from '@/app/context/AppContext';
 import Image from 'next/image';
 import { FaShoppingCart, FaSearch, FaUser } from "react-icons/fa";
+import { CartService } from '@/services/CartServices';
+import { AuthService } from '@/services/authServices';
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -20,13 +21,11 @@ const Header = () => {
     const { openCartModal } = useCartModalContext();
     const { user, logout, isAuthenticated } = useAppContext();
 
-    const product = useAppSelector(state => state.cartReducer.items);
-
     const handleOpenCartModal = () => {
         openCartModal();
     };
-
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await AuthService.logout();
         logout();
         setShowUserMenu(false);
         toast.success("Đăng xuất thành công!", {
@@ -189,9 +188,6 @@ const Header = () => {
                         >
                             <span className="inline-block relative">
                                 <FaShoppingCart />
-                                <span className="flex items-center justify-center font-medium text-2xs absolute -right-2 -top-2.5 bg-blue w-4.5 h-4.5 rounded-full text-white">
-                                    {product.length}
-                                </span>
                             </span>
                         </button>
 
