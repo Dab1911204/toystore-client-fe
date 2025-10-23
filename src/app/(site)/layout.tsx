@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import "../css/euclid-circular-a-font.css";
+import { Inter } from 'next/font/google';
 import "../css/style.css";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -17,6 +17,7 @@ import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
 import { AppProvider } from "../context/AppContext";
 
+<<<<<<< HEAD
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi" suppressHydrationWarning>
@@ -29,16 +30,40 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <PreLoader />
                 <Header />
 =======
+=======
+const inter = Inter({
+  subsets: ['latin', 'latin-ext', 'vietnamese'], // Thêm "vietnamese" để hỗ trợ tiếng Việt
+  weight: ['300', '400', '500', '600', '700'], // Các trọng lượng tương ứng với mã ban đầu
+  style: ['normal', 'italic'], // Hỗ trợ cả normal và italic
+  display: 'swap', // Tối ưu hóa tải font
+});
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 1000);
+  }, []);
+
+  return (
+    <html lang="en" suppressHydrationWarning={true}>
+      <body className={inter.className}>
+>>>>>>> 24bb53b (sadsdasdsa)
         {loading ? (
           <PreLoader />
         ) : (
           <>
-            <ReduxProvider>
-              <CartModalProvider>
-                <ModalProvider>
-                  <PreviewSliderProvider>
-                    <AppProvider>
+            <AppProvider>
+              <ReduxProvider>
+                <CartModalProvider>
+                  <ModalProvider>
+                    <PreviewSliderProvider>
                       <Header />
+<<<<<<< HEAD
                     </AppProvider>
                     {children}
 >>>>>>> 3323cab (sadada)
@@ -56,6 +81,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </CartModalProvider>
           </ModalProvider>
         </ReduxProvider>
+=======
+                      {children}
+
+                      <QuickViewModal />
+                      <CartSidebarModal />
+                      <PreviewSliderModal />
+                    </PreviewSliderProvider>
+                  </ModalProvider>
+                </CartModalProvider>
+              </ReduxProvider>
+            </AppProvider>
+            <ScrollToTop />
+            <Footer />
+          </>
+        )}
+>>>>>>> 24bb53b (sadsdasdsa)
       </body>
     </html>
   );
