@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Breadcrumb from "../Common/Breadcrumb";
-import CustomSelect from "./CustomSelect";
 import CategoryDropdown from "./CategoryDropdown";
 import GenderDropdown from "./GenderDropdown";
 import SizeDropdown from "./SizeDropdown";
@@ -10,18 +9,118 @@ import PriceDropdown from "./PriceDropdown";
 import shopData from "../Shop/shopData";
 import SingleGridItem from "../Shop/SingleGridItem";
 import SingleListItem from "../Shop/SingleListItem";
+import { useSearchParams } from "next/navigation";
+import { ProductService } from "@/services/productServices";
+import Image from "next/image";
 
 const ShopWithSidebar = () => {
-  const [productStyle, setProductStyle] = useState("grid");
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category');
+  const [productStyle, setProductStyle] = useState('grid');
   const [productSidebar, setProductSidebar] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
-
+  const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasPrevious, setHasPrevious] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
+  const [pageSize] = useState(15);
+  const [sort, setSort] = useState('CreateOn');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [priceRange, setPriceRange] = useState({ from: 0, to: 5000000 });
+  //const [categories, setCategories] = useState([]);
+  const handlePageChange = page => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
   const handleStickyMenu = () => {
     if (window.scrollY >= 80) {
       setStickyMenu(true);
     } else {
       setStickyMenu(false);
     }
+  };
+  // Tạo danh sách trang cho phân trang
+  const renderPagination = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+
+    if (totalPages === 0) return pages;
+
+    let startPage = Math.max(
+      1,
+      currentPage - Math.floor(maxPagesToShow / 2)
+    );
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    // Thêm trang đầu và dấu ... nếu cần
+    if (startPage > 1) {
+      pages.push(
+        <li key={1}>
+          <button
+            onClick={() => handlePageChange(1)}
+            className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
+          >
+            1
+          </button>
+        </li>
+      );
+      if (startPage > 2) {
+        pages.push(
+          <li key="ellipsis-start">
+            <span className="flex py-1.5 px-3.5">...</span>
+          </li>
+        );
+      }
+    }
+
+    // Thêm các trang ở giữa
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <li key={i}>
+          <button
+            onClick={() => handlePageChange(i)}
+            className={`flex py-1.5 px-3.5 duration-200 rounded-[3px] ${i === currentPage
+                ? 'bg-blue text-white'
+                : 'hover:text-white hover:bg-blue'
+              }`}
+          >
+            {i}
+          </button>
+        </li>
+      );
+    }
+
+    // Thêm dấu ... và trang cuối nếu cần
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push(
+          <li key="ellipsis-end">
+            <span className="flex py-1.5 px-3.5">...</span>
+          </li>
+        );
+      }
+      pages.push(
+        <li key={totalPages}>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
+          >
+            {totalPages}
+          </button>
+        </li>
+      );
+    }
+
+    return pages;
   };
 
   const options = [
@@ -97,6 +196,41 @@ const ShopWithSidebar = () => {
     };
   });
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const params: Record<string, any> = {
+          page: currentPage,
+          pageSize,
+          Sorts: sort,
+        };
+
+        // Thêm filter category nếu có
+        if (selectedCategories.length > 0) {
+          params.CategoryIds = selectedCategories.join(',');
+        }
+
+        // Thêm filter price nếu khác giá trị mặc định
+        if (priceRange.from > 0 || priceRange.to < 5000000) {
+          params.MinPrice = priceRange.from;
+          params.MaxPrice = priceRange.to;
+        }
+        const queryString = new URLSearchParams(params).toString();
+        const response = await ProductService.getProduct('/api/Product/client?' + queryString);
+        setProducts(response.result.items);
+        setTotalPages(response.result.totalPages);
+        console.log(response)
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProducts();
+  }, [])
+
   return (
     <>
       <Breadcrumb
@@ -108,20 +242,18 @@ const ShopWithSidebar = () => {
           <div className="flex gap-7.5">
             {/* <!-- Sidebar Start --> */}
             <div
-              className={`sidebar-content fixed xl:z-1 z-9999 left-0 top-0 xl:translate-x-0 xl:static max-w-[310px] xl:max-w-[270px] w-full ease-out duration-200 ${
-                productSidebar
-                  ? "translate-x-0 bg-white p-5 h-screen overflow-y-auto"
-                  : "-translate-x-full"
-              }`}
+              className={`sidebar-content fixed xl:z-1 z-9999 left-0 top-0 xl:translate-x-0 xl:static max-w-[310px] xl:max-w-[270px] w-full ease-out duration-200 ${productSidebar
+                ? "translate-x-0 bg-white p-5 h-screen overflow-y-auto"
+                : "-translate-x-full"
+                }`}
             >
               <button
                 onClick={() => setProductSidebar(!productSidebar)}
                 aria-label="button for product sidebar toggle"
-                className={`xl:hidden absolute -right-12.5 sm:-right-8 flex items-center justify-center w-8 h-8 rounded-md bg-white shadow-1 ${
-                  stickyMenu
-                    ? "lg:top-20 sm:top-34.5 top-35"
-                    : "lg:top-24 sm:top-39 top-37"
-                }`}
+                className={`xl:hidden absolute -right-12.5 sm:-right-8 flex items-center justify-center w-8 h-8 rounded-md bg-white shadow-1 ${stickyMenu
+                  ? "lg:top-20 sm:top-34.5 top-35"
+                  : "lg:top-24 sm:top-39 top-37"
+                  }`}
               >
                 <svg
                   className="fill-current"
@@ -181,12 +313,7 @@ const ShopWithSidebar = () => {
                 <div className="flex items-center justify-between">
                   {/* <!-- top bar left --> */}
                   <div className="flex flex-wrap items-center gap-4">
-                    <CustomSelect options={options} />
-
-                    <p>
-                      Showing <span className="text-dark">9 of 50</span>{" "}
-                      Products
-                    </p>
+                    Danh sánh sản phẩm
                   </div>
 
                   {/* <!-- top bar right --> */}
@@ -194,11 +321,10 @@ const ShopWithSidebar = () => {
                     <button
                       onClick={() => setProductStyle("grid")}
                       aria-label="button for product grid tab"
-                      className={`${
-                        productStyle === "grid"
-                          ? "bg-blue border-blue text-white"
-                          : "text-dark bg-gray-1 border-gray-3"
-                      } flex items-center justify-center w-10.5 h-9 rounded-[5px] border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
+                      className={`${productStyle === "grid"
+                        ? "bg-blue border-blue text-white"
+                        : "text-dark bg-gray-1 border-gray-3"
+                        } flex items-center justify-center w-10.5 h-9 rounded-[5px] border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
                     >
                       <svg
                         className="fill-current"
@@ -238,11 +364,10 @@ const ShopWithSidebar = () => {
                     <button
                       onClick={() => setProductStyle("list")}
                       aria-label="button for product list tab"
-                      className={`${
-                        productStyle === "list"
-                          ? "bg-blue border-blue text-white"
-                          : "text-dark bg-gray-1 border-gray-3"
-                      } flex items-center justify-center w-10.5 h-9 rounded-[5px] border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
+                      className={`${productStyle === "list"
+                        ? "bg-blue border-blue text-white"
+                        : "text-dark bg-gray-1 border-gray-3"
+                        } flex items-center justify-center w-10.5 h-9 rounded-[5px] border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
                     >
                       <svg
                         className="fill-current"
@@ -272,13 +397,12 @@ const ShopWithSidebar = () => {
 
               {/* <!-- Products Grid Tab Content Start --> */}
               <div
-                className={`${
-                  productStyle === "grid"
-                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-7.5 gap-y-9"
-                    : "flex flex-col gap-7.5"
-                }`}
+                className={`${productStyle === "grid"
+                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-7.5 gap-y-9"
+                  : "flex flex-col gap-7.5"
+                  }`}
               >
-                {shopData.map((item, key) =>
+                {products.map((item, key) =>
                   productStyle === "grid" ? (
                     <SingleGridItem item={item} key={key} />
                   ) : (
@@ -289,121 +413,59 @@ const ShopWithSidebar = () => {
               {/* <!-- Products Grid Tab Content End --> */}
 
               {/* <!-- Products Pagination Start --> */}
-              <div className="flex justify-center mt-15">
-                <div className="bg-white shadow-1 rounded-md p-2">
-                  <ul className="flex items-center">
-                    <li>
-                      <button
-                        id="paginationLeft"
-                        aria-label="button for pagination left"
-                        type="button"
-                        disabled
-                        className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px disabled:text-gray-4"
-                      >
-                        <svg
-                          className="fill-current"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+              {totalPages > 0 && (
+                <div className="flex justify-center mt-15">
+                  <div className="bg-white shadow-1 rounded-md p-2">
+                    <ul className="flex items-center gap-1">
+                      <li>
+                        <button
+                          onClick={() =>
+                            handlePageChange(
+                              currentPage - 1
+                            )
+                          }
+                          aria-label="button for pagination left"
+                          type="button"
+                          disabled={!hasPrevious}
+                          className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px] hover:text-white hover:bg-blue disabled:text-gray-4 disabled:cursor-not-allowed"
                         >
-                          <path
-                            d="M12.1782 16.1156C12.0095 16.1156 11.8407 16.0594 11.7282 15.9187L5.37197 9.45C5.11885 9.19687 5.11885 8.80312 5.37197 8.55L11.7282 2.08125C11.9813 1.82812 12.3751 1.82812 12.6282 2.08125C12.8813 2.33437 12.8813 2.72812 12.6282 2.98125L6.72197 9L12.6563 15.0187C12.9095 15.2719 12.9095 15.6656 12.6563 15.9187C12.4876 16.0312 12.347 16.1156 12.1782 16.1156Z"
-                            fill=""
+                          <Image
+                            src="/images/svg/pagination-left.svg"
+                            alt="Previous Page"
+                            width={18}
+                            height={18}
+                            className="w-4.5 h-4.5"
                           />
-                        </svg>
-                      </button>
-                    </li>
+                        </button>
+                      </li>
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] bg-blue text-white hover:text-white hover:bg-blue"
-                      >
-                        1
-                      </a>
-                    </li>
+                      {renderPagination()}
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        2
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        3
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        4
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        5
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        ...
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        10
-                      </a>
-                    </li>
-
-                    <li>
-                      <button
-                        id="paginationLeft"
-                        aria-label="button for pagination left"
-                        type="button"
-                        className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px] hover:text-white hover:bg-blue disabled:text-gray-4"
-                      >
-                        <svg
-                          className="fill-current"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                      <li>
+                        <button
+                          onClick={() =>
+                            handlePageChange(
+                              currentPage + 1
+                            )
+                          }
+                          aria-label="button for pagination right"
+                          type="button"
+                          disabled={!hasNext}
+                          className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px] hover:text-white hover:bg-blue disabled:text-gray-4 disabled:cursor-not-allowed"
                         >
-                          <path
-                            d="M5.82197 16.1156C5.65322 16.1156 5.5126 16.0594 5.37197 15.9469C5.11885 15.6937 5.11885 15.3 5.37197 15.0469L11.2782 9L5.37197 2.98125C5.11885 2.72812 5.11885 2.33437 5.37197 2.08125C5.6251 1.82812 6.01885 1.82812 6.27197 2.08125L12.6282 8.55C12.8813 8.80312 12.8813 9.19687 12.6282 9.45L6.27197 15.9187C6.15947 16.0312 5.99072 16.1156 5.82197 16.1156Z"
-                            fill=""
+                          <Image
+                            src="/images/svg/pagination-right.svg"
+                            alt="Next Page"
+                            width={18}
+                            height={18}
+                            className="w-4.5 h-4.5"
                           />
-                        </svg>
-                      </button>
-                    </li>
-                  </ul>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              )}
               {/* <!-- Products Pagination End --> */}
             </div>
             {/* // <!-- Content End --> */}

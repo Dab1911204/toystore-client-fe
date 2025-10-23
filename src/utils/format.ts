@@ -14,3 +14,12 @@ export function getFirstImageFromString(image?: string | null): string | null {
     return null;
   }
 }
+
+export function formatCurrency(amount: number, locale: string = "vi-VN"): string {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0, // không hiện số lẻ
+    maximumFractionDigits: 0
+  }).format(amount);
+}
