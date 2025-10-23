@@ -248,7 +248,7 @@ const Header = () => {
                         >
                             {/* <!-- Main Nav Start --> */}
                             <nav>
-                                {/* <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-12">
+                                <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-12">
                                     {menuData.map((menuItem, i) =>
                                         menuItem.submenu ? (
                                             <Dropdown
@@ -274,37 +274,11 @@ const Header = () => {
                                             </li>
                                         )
                                     )}
-                                </ul> */}
+                                </ul>
                             </nav>
                             {/* <!-- Main Nav End --> */}
                         </div>
                         {/* <!--=== Main Nav End ===--> */}
-
-                        {/* <!--=== Nav Right Start ===--> */}
-                        <div className="hidden xl:block">
-                            {/* <ul className="flex items-center gap-5.5">
-                                <li className="py-4">
-                                    <a
-                                        href="#"
-                                        className="flex items-center gap-1.5 font-medium text-custom-md text-white hover:text-blue"
-                                    >
-                                        <RecentlyViewedIcon className="fill-current" />
-                                        Đã xem gần đây
-                                    </a>
-                                </li>
-
-                                <li className="py-4">
-                                    <Link
-                                        href="/wishlist"
-                                        className="flex items-center gap-1.5 font-medium text-custom-md text-white hover:text-blue"
-                                    >
-                                        <WishlistIcon className="fill-current" />
-                                        Yêu thích
-                                    </Link>
-                                </li>
-                            </ul> */}
-                        </div>
-                        {/* <!--=== Nav Right End ===--> */}
                     </div>
                 </div>
             </div>
