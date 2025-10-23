@@ -1,6 +1,6 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useCallback, useRef, useEffect } from "react";
+import { useCallback, useRef, useEffect, useState } from "react";
 import data from "./categoryData";
 import Image from "next/image";
 
@@ -8,9 +8,13 @@ import Image from "next/image";
 import "swiper/css/navigation";
 import "swiper/css";
 import SingleItem from "./SingleItem";
+import { categoryService } from "@/services/category";
 
+// eslint-disable-next-line @next/next/no-async-client-component
 const Categories = () => {
   const sliderRef = useRef(null);
+  const [listCategory, setListCategory] = useState<any[]>([]);
+  const [toTalCategory, settoTalCategory] = useState<any>(0);
 
   const handlePrev = useCallback(() => {
     if (!sliderRef.current) return;
@@ -27,6 +31,19 @@ const Categories = () => {
       sliderRef.current.swiper.init();
     }
   }, []);
+
+  const fecthData = async () => {
+    const getListCategory = await categoryService.getListCategory('/api/Category/Client');
+    setListCategory(getListCategory.result.items);
+    settoTalCategory(getListCategory.result.totalCount)
+  }
+
+  useEffect(() => {
+    fecthData();
+  }, []);
+
+  console.log("số lượng", toTalCategory);
+  console.log("item", listCategory);
 
   return (
     <section className="overflow-hidden pt-17.5">
@@ -134,7 +151,7 @@ const Categories = () => {
               },
             }}
           >
-            {data.map((item, key) => (
+            {listCategory.map((item, key) => (
               <SwiperSlide key={key}>
                 <SingleItem item={item} />
               </SwiperSlide>
