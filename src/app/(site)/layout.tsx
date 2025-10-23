@@ -38,17 +38,12 @@ const inter = Inter({
   display: 'swap', // Tối ưu hóa tải font
 });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
@@ -59,10 +54,12 @@ export default function RootLayout({
           <>
             <AppProvider>
               <ReduxProvider>
-                <CartModalProvider>
-                  <ModalProvider>
+                <ModalProvider>
+                  <CartModalProvider>
                     <PreviewSliderProvider>
+                      <PreLoader />
                       <Header />
+<<<<<<< HEAD
 <<<<<<< HEAD
                     </AppProvider>
                     {children}
@@ -82,22 +79,27 @@ export default function RootLayout({
           </ModalProvider>
         </ReduxProvider>
 =======
+=======
+
+>>>>>>> f57cedb (zXzxz)
                       {children}
 
+                      <Footer />
+                      <ScrollToTop />
+
+                      {/* Các modal toàn cục */}
                       <QuickViewModal />
                       <CartSidebarModal />
                       <PreviewSliderModal />
                     </PreviewSliderProvider>
-                  </ModalProvider>
-                </CartModalProvider>
+                  </CartModalProvider>
+                </ModalProvider>
               </ReduxProvider>
             </AppProvider>
-            <ScrollToTop />
-            <Footer />
           </>
         )}
 >>>>>>> 24bb53b (sadsdasdsa)
       </body>
     </html>
-  );
+  )
 }
