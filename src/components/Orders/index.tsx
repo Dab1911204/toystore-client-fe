@@ -1,19 +1,24 @@
+"use client"
 import React, { useEffect, useState } from "react";
 import SingleOrder from "./SingleOrder";
 import ordersData from "./ordersData";
+import { OrderService } from "@/services/orderServices";
 
 const Orders = () => {
   const [orders, setOrders] = useState<any>([]);
 
+  const fecthData = async () => {
+    try {
+      const res = await OrderService.getOrder('/api/Order/my-orders')
+      console.log(res);
+      setOrders(res.result.orders);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
   useEffect(() => {
-    fetch(`/api/order`)
-      .then((res) => res.json())
-      .then((data) => {
-        setOrders(data.orders);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    fecthData()
   }, []);
 
   return (
@@ -29,10 +34,6 @@ const Orders = () => {
 
               <div className="min-w-[128px]">
                 <p className="text-custom-sm text-dark">Status</p>
-              </div>
-
-              <div className="min-w-[213px]">
-                <p className="text-custom-sm text-dark">Title</p>
               </div>
 
               <div className="min-w-[113px]">
