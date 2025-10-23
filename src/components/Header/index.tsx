@@ -9,8 +9,9 @@ import { selectTotalPrice } from '@/redux/features/cart-slice';
 import { useCartModalContext } from '@/app/context/CartSidebarModalContext';
 import { useAppContext } from '@/app/context/AppContext';
 import Image from 'next/image';
-import { FaSearch,FaRegUser } from "react-icons/fa";
-import { MdOutlineShoppingCart } from "react-icons/md"; // Import các SVG components
+import { IoSearch } from "react-icons/io5";
+import { FaRegUser,FaShoppingCart } from "react-icons/fa";
+import { AuthService } from '@/services/authServices';
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -23,14 +24,14 @@ const Header = () => {
     const { user, logout, isAuthenticated } = useAppContext();
 
     const product = useAppSelector(state => state.cartReducer.items);
-    const totalPrice = useSelector(selectTotalPrice);
 
     const handleOpenCartModal = () => {
         openCartModal();
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         logout();
+        await AuthService.logout();
         setShowUserMenu(false);
     };
 
@@ -110,7 +111,7 @@ const Header = () => {
                                         aria-label="Search"
                                         className="flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 ease-in duration-200 hover:text-blue"
                                     >
-                                        <FaSearch className="fill-current" />
+                                        <IoSearch className="fill-current" />
                                     </button>
                                 </div>
                             </div>
@@ -182,7 +183,7 @@ const Header = () => {
                             className="flex items-center gap-2.5"
                         >
                             <span className="inline-block relative">
-                                <MdOutlineShoppingCart />
+                                <FaShoppingCart />
                                 <span className="flex items-center justify-center font-medium text-2xs absolute -right-2 -top-2.5 bg-blue w-4.5 h-4.5 rounded-full text-white">
                                     {product.length}
                                 </span>
@@ -248,7 +249,7 @@ const Header = () => {
                         >
                             {/* <!-- Main Nav Start --> */}
                             <nav>
-                                {/* <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-12">
+                                <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-12">
                                     {menuData.map((menuItem, i) =>
                                         menuItem.submenu ? (
                                             <Dropdown
@@ -274,37 +275,11 @@ const Header = () => {
                                             </li>
                                         )
                                     )}
-                                </ul> */}
+                                </ul>
                             </nav>
                             {/* <!-- Main Nav End --> */}
                         </div>
                         {/* <!--=== Main Nav End ===--> */}
-
-                        {/* <!--=== Nav Right Start ===--> */}
-                        <div className="hidden xl:block">
-                            {/* <ul className="flex items-center gap-5.5">
-                                <li className="py-4">
-                                    <a
-                                        href="#"
-                                        className="flex items-center gap-1.5 font-medium text-custom-md text-white hover:text-blue"
-                                    >
-                                        <RecentlyViewedIcon className="fill-current" />
-                                        Đã xem gần đây
-                                    </a>
-                                </li>
-
-                                <li className="py-4">
-                                    <Link
-                                        href="/wishlist"
-                                        className="flex items-center gap-1.5 font-medium text-custom-md text-white hover:text-blue"
-                                    >
-                                        <WishlistIcon className="fill-current" />
-                                        Yêu thích
-                                    </Link>
-                                </li>
-                            </ul> */}
-                        </div>
-                        {/* <!--=== Nav Right End ===--> */}
                     </div>
                 </div>
             </div>
