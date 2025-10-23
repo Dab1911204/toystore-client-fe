@@ -1,9 +1,6 @@
 import React from "react";
 import Breadcrumb from "../Common/Breadcrumb";
-import SearchForm from "../Blog/SearchForm";
-import LatestPosts from "../Blog/LatestPosts";
 import LatestProducts from "../Blog/LatestProducts";
-import blogData from "../BlogGrid/blogData";
 import Image from "next/image";
 import shopData from "../Shop/shopData"; 
 
@@ -266,10 +263,10 @@ const BlogDetailsWithSidebar = () => {
             {/* <!-- blog sidebar --> */}
             <div className="lg:max-w-[370px] w-full">
               {/* <!-- search box --> */}
-              <SearchForm />
+              {/* <SearchForm /> */}
 
               {/* <!-- Recent Posts box --> */}
-              <LatestPosts blogs={blogData} />
+              {/* <LatestPosts blogs={blogData} /> */}
 
               {/* <!-- Latest Products box --> */}
               <LatestProducts products={shopData} />

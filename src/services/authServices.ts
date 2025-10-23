@@ -20,5 +20,6 @@ export const AuthService = {
       return false;
     }
   },
-  getProfile:() => get<any>("/api/Auth/get-profile",{requireAuth:true})
+  getProfile:() => get<any>("/api/Auth/get-profile",{requireAuth:true}),
+  signup:(data:any) => post<any>("/api/Auth/sign-up",data)
 };
