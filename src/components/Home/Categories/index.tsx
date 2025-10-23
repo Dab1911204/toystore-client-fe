@@ -1,7 +1,6 @@
 'use client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useCallback, useRef, useEffect, useState } from 'react';
-import Image from 'next/image';
 
 // Import Swiper styles
 import 'swiper/css/navigation';
@@ -13,13 +12,12 @@ const Categories = () => {
     const sliderRef = useRef(null);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     // Fetch API lấy categories
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await CategoryService.getListCategory('/api/Category/Client?pageSize=10000');
+                const response = await CategoryService.getCategory('/api/Category/Client?pageSize=10000');
                 console.log(response);
                 if (response.success) {
                     // Lọc danh mục cha (parentId: null)
@@ -31,7 +29,7 @@ const Categories = () => {
                     throw new Error('API response unsuccessful');
                 }
             } catch (err) {
-                setError(err.message);
+                console.error('Failed to fetch categories:', err);
             } finally {
                 setLoading(false);
             }
@@ -55,16 +53,6 @@ const Categories = () => {
             sliderRef.current.swiper.init();
         }
     }, [categories]); // Re-init Swiper after data loads
-
-    // if (loading) {
-    //     return (
-    //         <div className="overflow-hidden pt-17.5">Loading categories...</div>
-    //     );
-    // }
-
-    // if (error) {
-    //     return <div className="overflow-hidden pt-17.5">Error: {error}</div>;
-    // }
 
     return (
         <section className="overflow-hidden pt-17.5">

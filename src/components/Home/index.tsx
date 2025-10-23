@@ -15,9 +15,6 @@ const Home = () => {
       <Categories />
       <NewArrival />
       <BestSeller />
-      <CounDown />
-      <Testimonials />
-      <Newsletter />
     </main>
   );
 };
