@@ -39,6 +39,6 @@ const data = [
     id: 8,
     img: "/images/categories/categories-04.png",
   },
-];
+]; 
 
 export default data;
