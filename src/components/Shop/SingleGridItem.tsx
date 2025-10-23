@@ -1,9 +1,11 @@
 "use client";
+import 'react-toastify/dist/ReactToastify.css';
 import React from "react";
 import { useModalContext } from "@/app/context/QuickViewModalContext";
 import Link from "next/link";
 import Image from "next/image";
 import { formatCurrency } from "@/utils/format";
+import { addCart } from "@/utils/cart";
 
 const SingleGridItem = ({ item }: { item: any }) => {
   const { openModal } = useModalContext();
@@ -12,7 +14,9 @@ const SingleGridItem = ({ item }: { item: any }) => {
   const handleQuickViewUpdate = () => { };
 
   // add to cart
-  const handleAddToCart = () => { };
+  const handleAddToCart = async () => {
+    await addCart(item.id, 1)
+  };
 
   const handleItemToWishList = () => { };
 

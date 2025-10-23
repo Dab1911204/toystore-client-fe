@@ -4,12 +4,11 @@ import Link from 'next/link';
 import { menuData } from './menuData';
 import Dropdown from './Dropdown';
 import { useAppSelector } from '@/redux/store';
-import { useSelector } from 'react-redux';
-import { selectTotalPrice } from '@/redux/features/cart-slice';
+import { toast, Slide } from 'react-toastify';
 import { useCartModalContext } from '@/app/context/CartSidebarModalContext';
 import { useAppContext } from '@/app/context/AppContext';
 import Image from 'next/image';
-import { FaShoppingCart,FaSearch,FaUser  } from "react-icons/fa";
+import { FaShoppingCart, FaSearch, FaUser } from "react-icons/fa";
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -22,7 +21,6 @@ const Header = () => {
     const { user, logout, isAuthenticated } = useAppContext();
 
     const product = useAppSelector(state => state.cartReducer.items);
-    const totalPrice = useSelector(selectTotalPrice);
 
     const handleOpenCartModal = () => {
         openCartModal();
@@ -31,6 +29,17 @@ const Header = () => {
     const handleLogout = () => {
         logout();
         setShowUserMenu(false);
+        toast.success("Đăng xuất thành công!", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Slide,
+        });
     };
 
     const getFirstName = (fullName: string | null | undefined) => {
@@ -255,8 +264,8 @@ const Header = () => {
                                                 <Link
                                                     href={menuItem.path}
                                                     className={`hover:text-blue text-custom-lg font-medium text-white flex ${stickyMenu
-                                                            ? 'xl:py-4'
-                                                            : 'xl:py-6'
+                                                        ? 'xl:py-4'
+                                                        : 'xl:py-6'
                                                         }`}
                                                 >
                                                     {menuItem.title}

@@ -4,12 +4,15 @@ import { useModalContext } from "@/app/context/QuickViewModalContext";
 import Link from "next/link";
 import Image from "next/image";
 import { formatCurrency } from "@/utils/format"; // nếu bạn đã có utils format
+import { addCart } from "@/utils/cart";
 
 const SingleListItem = ({ item }: { item: any }) => {
   const { openModal } = useModalContext();
 
   const handleQuickViewUpdate = () => { };
-  const handleAddToCart = () => { };
+  const handleAddToCart = async () => {
+    await addCart(item.id, 1)
+  };
   const handleItemToWishList = () => { };
 
   // Tính % giảm giá nếu có

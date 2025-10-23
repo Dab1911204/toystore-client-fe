@@ -433,7 +433,7 @@ const ShopWithSidebar = () => {
                                 ).format(
                                   priceRange.to
                                 )}{' '}
-                                vnđ
+                                d
                               </span>
                               <button
                                 type="button"
