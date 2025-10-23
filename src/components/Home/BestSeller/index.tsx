@@ -32,7 +32,7 @@ const BestSeller: React.FC = () => {
                 setLoading(true);
                 setError(null);
 
-                const response: BestSellerProduct[]= await ProductService.getListProduct(apiPath, {
+                const response: BestSellerProduct[]= await ProductService.getProduct(apiPath, {
                     signal: controller.signal,
                 });
                 console.log('BestSeller response:', response);

@@ -17,7 +17,7 @@ const Categories = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await CategoryService.getListCategory('/api/Category/Client?pageSize=10000');
+                const response = await CategoryService.getCategory('/api/Category/Client?pageSize=10000');
                 console.log(response);
                 if (response.success) {
                     // Lọc danh mục cha (parentId: null)

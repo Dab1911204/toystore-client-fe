@@ -18,7 +18,7 @@ const NewArrival = () => {
         setIsLoading(true);
         const PageNumber = 1;
         const PageSize = 12;
-        const response = await ProductService.getListProduct(
+        const response = await ProductService.getProduct(
           `/api/Product/client?Sorts=CreateOn&PageNumber=${PageNumber}&PageSize=${PageSize}`
         );
         console.log('response:', response);

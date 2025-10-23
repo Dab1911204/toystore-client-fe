@@ -104,7 +104,7 @@ const ProductItem = ({ item }: { item: Product }) => {
       <div className="flex h-full flex-col overflow-hidden rounded-lg bg-[#F6F7FB] border-[2px] border-[#f2f2f2]">
         <div className="relative flex h-[280px] items-center justify-center overflow-hidden bg-white">
           <Link
-            href={`/shop-details?id=${item.id}`}
+            href={`/shop-details/${item.slug}`}
             className="relative flex h-[240px] items-center justify-center  bg-white"
           >
             {isImageLoading && !hasImageError && (
