@@ -23,9 +23,6 @@ const Orders = () => {
           {/* <!-- order item --> */}
           {ordersData.length > 0 && (
             <div className="items-center justify-between py-4.5 px-7.5 hidden md:flex ">
-              <div className="min-w-[111px]">
-                <p className="text-custom-sm text-dark">Order</p>
-              </div>
               <div className="min-w-[175px]">
                 <p className="text-custom-sm text-dark">Date</p>
               </div>

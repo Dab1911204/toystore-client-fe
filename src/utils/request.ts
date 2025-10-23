@@ -18,11 +18,16 @@ const API_DOMAIN =
 
 const redirectToLogin = (server = false) => {
   if (server) {
-    redirect("/signin")
+    // Nếu đang ở trang /signin thì không redirect nữa
+    return redirect("/signin") // server side
   } else {
+    // Kiểm tra nếu đang ở /signin thì bỏ qua
+    if (window.location.pathname === "/signin") return
+
     // Xoá cookie client-side
     document.cookie = "sessionToken=; Max-Age=0; path=/"
     document.cookie = "roleUser=; Max-Age=0; path=/"
+
     window.location.href = "/signin"
   }
 }
@@ -60,7 +65,7 @@ const request = async <T>(
   path: string,
   options?: CustomOption
 ): Promise<T> => {
-  const requireAuth = options?.requireAuth ?? false
+  const requireAuth = options?.requireAuth ?? true
   const requireManager = options?.requireManager ?? false
 
   // --- Client vs Server ---
@@ -75,7 +80,6 @@ const request = async <T>(
     token = options?.token
     role = options?.role
   }
-
   if (requireAuth && !token) {
     if (typeof window !== "undefined") {
       redirectToLogin(false)

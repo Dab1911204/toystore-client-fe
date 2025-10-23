@@ -7,42 +7,50 @@ import {
 } from "@/redux/features/cart-slice";
 
 import Image from "next/image";
-
-const SingleItem = ({ item }) => {
+import { deleteCart } from "@/utils/cart";
+import { formatCurrency } from "@/utils/format";
+interface SingleItemProps {
+  item: any;
+  onUpdateQuantity: (productId: string, quantity: number) => void;
+  onRemove: (productId: string) => void;
+}
+const SingleItem: React.FC<SingleItemProps> = ({ item, onUpdateQuantity, onRemove }) => {
   const [quantity, setQuantity] = useState(item.quantity);
 
-  const dispatch = useDispatch<AppDispatch>();
-
   const handleRemoveFromCart = () => {
-    dispatch(removeItemFromCart(item.id));
+    onRemove(item.product.id);
+    deleteCart(item.product.id); // nếu vẫn cần gọi API
   };
 
   const handleIncreaseQuantity = () => {
-    setQuantity(quantity + 1);
-    dispatch(updateCartItemQuantity({ id: item.id, quantity: quantity + 1 }));
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    onUpdateQuantity(item.product.id, newQuantity);
   };
 
   const handleDecreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-      dispatch(updateCartItemQuantity({ id: item.id, quantity: quantity - 1 }));
-    } else {
-      return;
-    }
+    if (quantity <= 1) return;
+    const newQuantity = quantity - 1;
+    setQuantity(newQuantity);
+    onUpdateQuantity(item.product.id, newQuantity);
   };
 
   return (
     <div className="flex items-center border-t border-gray-3 py-5 px-7.5">
       <div className="min-w-[400px]">
         <div className="flex items-center justify-between gap-5">
-          <div className="w-full flex items-center gap-5.5">
+          <div className="w-full flex items-center gap-5.5 ">
             <div className="flex items-center justify-center rounded-[5px] bg-gray-2 max-w-[80px] w-full h-17.5">
-              <Image width={200} height={200} src={item.imgs?.thumbnails[0]} alt="product" />
+              <Image 
+                width={200} 
+                height={200} 
+                src={item.product.image && item.product.image.length > 0 ? item.product.image[0] : "/images/noImage/error.png"}
+                alt={item.product.name}   />
             </div>
 
             <div>
               <h3 className="text-dark ease-out duration-200 hover:text-blue">
-                <a href="#"> {item.title} </a>
+                <a href="#"> {item.product.name} </a>
               </h3>
             </div>
           </div>
@@ -50,7 +58,7 @@ const SingleItem = ({ item }) => {
       </div>
 
       <div className="min-w-[180px]">
-        <p className="text-dark">${item.discountedPrice}</p>
+        <p className="text-dark"> {formatCurrency(item.product.discountedPrice)}</p>
       </div>
 
       <div className="min-w-[275px]">
@@ -106,7 +114,7 @@ const SingleItem = ({ item }) => {
       </div>
 
       <div className="min-w-[200px]">
-        <p className="text-dark">${item.discountedPrice * quantity}</p>
+        <p className="text-dark">{formatCurrency(item.product.discountedPrice * quantity)} </p>
       </div>
 
       <div className="min-w-[50px] flex justify-end">
