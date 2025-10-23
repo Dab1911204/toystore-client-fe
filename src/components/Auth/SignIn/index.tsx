@@ -1,4 +1,5 @@
 "use client"
+import { useAppContext } from "@/app/context/AppContext";
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import { AuthService } from "@/services/authServices";
 import Link from "next/link";
@@ -11,6 +12,7 @@ const Signin = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const {setUser} = useAppContext();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -18,14 +20,16 @@ const Signin = () => {
 
     try {
       const response = await AuthService.login({ username, password });
+      console.log(response)
       const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000)
-      if (response.data.success) {
+      if (response.success) {
+        localStorage.setItem('user', JSON.stringify(response.result.user));
         await AuthService.auth({
           roleUser: response.result.user.roles[0],
           sessionToken: response.result.accessToken,
           expiresAt: expiresAt.toISOString(),
         })
-
+        setUser(response.result.user);
         // Redirect to home page
         router.push('/');
       } else {
@@ -68,9 +72,12 @@ const Signin = () => {
 
                   <input
                     type="email"
-                    name="email"
-                    id="email"
-                    placeholder="Enter your email"
+                    id="username"
+                    name="username"
+                    onChange={e =>
+                      setUsername(e.target.value)
+                    }
+                    placeholder="Nhập email của bạn"
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />
                 </div>
@@ -84,7 +91,10 @@ const Signin = () => {
                     type="password"
                     name="password"
                     id="password"
-                    placeholder="Enter your password"
+                    onChange={e =>
+                      setPassword(e.target.value)
+                    }
+                    placeholder="Nhập mật khẩu của bạn"
                     autoComplete="on"
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />

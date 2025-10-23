@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import "../css/euclid-circular-a-font.css";
+import { Inter } from 'next/font/google';
 import "../css/style.css";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -15,6 +15,14 @@ import PreviewSliderModal from "@/components/Common/PreviewSlider";
 
 import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
+import { AppProvider } from "../context/AppContext";
+
+const inter = Inter({
+  subsets: ['latin', 'latin-ext', 'vietnamese'], // Thêm "vietnamese" để hỗ trợ tiếng Việt
+  weight: ['300', '400', '500', '600', '700'], // Các trọng lượng tương ứng với mã ban đầu
+  style: ['normal', 'italic'], // Hỗ trợ cả normal và italic
+  display: 'swap', // Tối ưu hóa tải font
+});
 
 export default function RootLayout({
   children,
@@ -29,25 +37,27 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body>
+      <body className={inter.className}>
         {loading ? (
           <PreLoader />
         ) : (
           <>
-            <ReduxProvider>
-              <CartModalProvider>
-                <ModalProvider>
-                  <PreviewSliderProvider>
-                    <Header />
-                    {children}
+            <AppProvider>
+              <ReduxProvider>
+                <CartModalProvider>
+                  <ModalProvider>
+                    <PreviewSliderProvider>
+                      <Header />
+                      {children}
 
-                    <QuickViewModal />
-                    <CartSidebarModal />
-                    <PreviewSliderModal />
-                  </PreviewSliderProvider>
-                </ModalProvider>
-              </CartModalProvider>
-            </ReduxProvider>
+                      <QuickViewModal />
+                      <CartSidebarModal />
+                      <PreviewSliderModal />
+                    </PreviewSliderProvider>
+                  </ModalProvider>
+                </CartModalProvider>
+              </ReduxProvider>
+            </AppProvider>
             <ScrollToTop />
             <Footer />
           </>

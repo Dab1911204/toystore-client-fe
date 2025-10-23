@@ -11,9 +11,9 @@ const Signup = () => {
           <div className="max-w-[570px] w-full mx-auto rounded-xl bg-white shadow-1 p-4 sm:p-7.5 xl:p-11">
             <div className="text-center mb-11">
               <h2 className="font-semibold text-xl sm:text-2xl xl:text-heading-5 text-dark mb-1.5">
-                Create an Account
+                Tạo tài khoản mới
               </h2>
-              <p>Enter your detail below</p>
+              <p>Nhập thông tin của bạn</p>
             </div>
 
             <div className="flex flex-col gap-4.5">
