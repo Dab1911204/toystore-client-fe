@@ -23,11 +23,6 @@ const SingleOrder = ({ orderItem, smallView }: any) => {
     <>
       {!smallView && (
         <div className="items-center justify-between border-t border-gray-3 py-5 px-7.5 hidden md:flex">
-          <div className="min-w-[111px]">
-            <p className="text-custom-sm text-red">
-              #{orderItem.orderId.slice(-8)}
-            </p>
-          </div>
           <div className="min-w-[175px]">
             <p className="text-custom-sm text-dark">{orderItem.createdAt}</p>
           </div>
