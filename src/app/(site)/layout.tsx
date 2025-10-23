@@ -17,20 +17,6 @@ import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
 import { AppProvider } from "../context/AppContext";
 
-<<<<<<< HEAD
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="vi" suppressHydrationWarning>
-      <body>
-<<<<<<< HEAD
-        <ReduxProvider>
-          <ModalProvider>
-            <CartModalProvider>
-              <PreviewSliderProvider>
-                <PreLoader />
-                <Header />
-=======
-=======
 const inter = Inter({
   subsets: ['latin', 'latin-ext', 'vietnamese'], // Thêm "vietnamese" để hỗ trợ tiếng Việt
   weight: ['300', '400', '500', '600', '700'], // Các trọng lượng tương ứng với mã ban đầu
@@ -47,7 +33,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
->>>>>>> 24bb53b (sadsdasdsa)
         {loading ? (
           <PreLoader />
         ) : (
@@ -59,29 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <PreviewSliderProvider>
                       <PreLoader />
                       <Header />
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    </AppProvider>
-                    {children}
->>>>>>> 3323cab (sadada)
 
-                {children}
-
-                <Footer />
-                <ScrollToTop />
-
-                {/* Các modal toàn cục */}
-                <QuickViewModal />
-                <CartSidebarModal />
-                <PreviewSliderModal />
-              </PreviewSliderProvider>
-            </CartModalProvider>
-          </ModalProvider>
-        </ReduxProvider>
-=======
-=======
-
->>>>>>> f57cedb (zXzxz)
                       {children}
 
                       <Footer />
@@ -98,7 +61,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </AppProvider>
           </>
         )}
->>>>>>> 24bb53b (sadsdasdsa)
       </body>
     </html>
   )
