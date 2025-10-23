@@ -1,10 +1,32 @@
-import React from "react";
+"use client";
+
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductItem from "@/components/Common/ProductItem";
 import shopData from "@/components/Shop/shopData";
+import { ProductService } from "@/services/productServices";
 
 const NewArrival = () => {
+
+
+  const [listProduct, setlistProduct] = useState<any[]>([]);
+  const [toTalProduct, settoTalProduct] = useState<any>(0);
+
+  const fecthData = async () => {
+    const getlistProduct = await ProductService.getProduct('/api/Product/client?Sortby=createdOn&SortAsc=false');
+    setlistProduct(getlistProduct.result.items);
+    settoTalProduct(getlistProduct.result.totalCount)
+  }
+
+  useEffect(() => {
+    fecthData();
+  }, []);
+
+  console.log("số lượng", toTalProduct);
+  console.log("item", listProduct);
+
   return (
     <section className="overflow-hidden pt-15">
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -48,7 +70,7 @@ const NewArrival = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-7.5 gap-y-9">
           {/* <!-- New Arrivals item --> */}
-          {shopData.map((item, key) => (
+          {listProduct.map((item, key) => (
             <ProductItem item={item} key={key} />
           ))}
         </div>

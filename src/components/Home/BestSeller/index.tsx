@@ -1,10 +1,33 @@
-import React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import SingleItem from "./SingleItem";
 import Image from "next/image";
 import Link from "next/link";
 import shopData from "@/components/Shop/shopData";
+import { ProductService } from "@/services/productServices";
 
 const BestSeller = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+
+  const [listProduct, setlistProduct] = useState<any[]>([]);
+  const [toTalProduct, settoTalProduct] = useState<any>(0);
+
+  const fecthData = async () => {
+    const getlistProduct = await ProductService.getProduct(`/api/Statistic/product/${year}/${month}?topN=9`);
+    setlistProduct(getlistProduct);
+    //settoTalProduct(getlistProduct.result.totalCount)
+  }
+
+  useEffect(() => {
+    fecthData();
+  }, []);
+
+  console.log("số lượng", toTalProduct);
+  console.log("item", listProduct);
+
+
   return (
     <section className="overflow-hidden">
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -28,7 +51,7 @@ const BestSeller = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7.5">
           {/* <!-- Best Sellers item --> */}
-          {shopData.slice(1, 7).map((item, key) => (
+          {listProduct.map((item, key) => (
             <SingleItem item={item} key={key} />
           ))}
         </div>

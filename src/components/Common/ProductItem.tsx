@@ -1,8 +1,10 @@
+
 "use client";
 import React from "react";
 import { useModalContext } from "@/app/context/QuickViewModalContext";
 import Link from "next/link";
 import Image from "next/image";
+import { formatCurrency } from "@/utils/format";
 
 const SingleGridItem = ({ item }: { item: any }) => {
   const { openModal } = useModalContext();
@@ -15,12 +17,17 @@ const SingleGridItem = ({ item }: { item: any }) => {
 
   const handleItemToWishList = () => { };
 
+  const discountPercentage = item?.promotion?.discountPercent ? item.promotion.discountPercent : 0;
+
+  const priceProduct = discountPercentage > 0 ? item.price * (1 - discountPercentage / 100) : item.price;
+
+
   return (
     <div className="group">
       <div className="relative overflow-hidden flex items-center justify-center rounded-lg bg-white shadow-1 min-h-[270px] mb-4">
         {item.promotion && (
           <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
-            -{item.promotion.discountPercent}%
+            -{discountPercentage}%
           </div>
         )}
         <Image
@@ -64,7 +71,13 @@ const SingleGridItem = ({ item }: { item: any }) => {
 
           <button
             onClick={() => handleAddToCart()}
-            className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] bg-blue text-white ease-out duration-200 hover:bg-blue-dark"
+            disabled={item.quantity <= 0}
+            className={`inline-flex items-center gap-2 font-medium text-sm py-2 px-5 rounded-lg bg-blue
+    transition-all duration-300 shadow-md
+    ${item.quantity > 0
+                ? 'bg-blue text-white hover:bg-blue-light hover:scale-105'
+                : 'bg-blue-light-5 text-dark-2 cursor-not-allowed opacity-70'
+              }`}
           >
             Thêm giỏ hàng
           </button>
@@ -94,12 +107,6 @@ const SingleGridItem = ({ item }: { item: any }) => {
       </div>
 
       <div className="flex flex-col gap-2 mb-4">
-        {/* Nhà cung cấp */}
-        <div className="flex items-center gap-1 text-sm text-gray-500">
-          <span>Nhà cung cấp:</span>
-          <span className="font-medium text-gray-800">{item.supplier.name}</span>
-        </div>
-
         {/* Danh mục */}
         {item.category?.name && (
           <div className="flex items-center gap-1 text-sm text-gray-500">
@@ -109,15 +116,26 @@ const SingleGridItem = ({ item }: { item: any }) => {
         )}
 
         {/* Tiêu đề sản phẩm */}
-        <h3 className="font-medium text-gray-900 hover:text-blue-600 transition-colors duration-200">
-          <Link href="/shop-details">{item.productName}</Link>
-        </h3>
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+          {/* Tiêu đề sản phẩm */}
+          <h3 className="font-medium text-gray-900 hover:text-blue-600 transition-colors duration-200 break-words">
+            <Link href={`/shop-details/${item.slug}`}>{item.productName}</Link>
+          </h3>
+
+          {/* Số lượng */}
+          {item.quantity <= 0 ? (
+            <p className="text-sm text-red">Hết hàng</p>
+          ) : (
+            <p className="text-sm text-green-light">Còn: {item.quantity} sản phẩm</p>
+          )}
+        </div>
 
         {/* Giá và số lượng */}
         <div className="flex items-center gap-4 mt-1">
-          <span className="text-lg font-semibold text-red-600">${item.discountedPrice}</span>
-          <span className="text-sm text-gray-400 line-through">${item.price}</span>
-          <span className="text-sm text-gray-500">Số lượng: {item.stock}</span>
+          <span className="text-lg font-semibold text-red-600">{formatCurrency(priceProduct)}</span>
+          {discountPercentage > 0 && (
+            <span className="text-sm text-gray-400 line-through">{formatCurrency(priceProduct)}</span>
+          )}
         </div>
       </div>
     </div>
