@@ -2,11 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Breadcrumb from "../Common/Breadcrumb";
 import CategoryDropdown from "./CategoryDropdown";
-import GenderDropdown from "./GenderDropdown";
-import SizeDropdown from "./SizeDropdown";
-import ColorsDropdwon from "./ColorsDropdwon";
 import PriceDropdown from "./PriceDropdown";
-import shopData from "../Shop/shopData";
 import SingleGridItem from "../Shop/SingleGridItem";
 import SingleListItem from "../Shop/SingleListItem";
 import { useSearchParams } from "next/navigation";
@@ -31,7 +27,7 @@ const ShopWithSidebar = () => {
   const [error, setError] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState({ from: 0, to: 5000000 });
-  //const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
   const handlePageChange = page => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -89,8 +85,8 @@ const ShopWithSidebar = () => {
           <button
             onClick={() => handlePageChange(i)}
             className={`flex py-1.5 px-3.5 duration-200 rounded-[3px] ${i === currentPage
-                ? 'bg-blue text-white'
-                : 'hover:text-white hover:bg-blue'
+              ? 'bg-blue text-white'
+              : 'hover:text-white hover:bg-blue'
               }`}
           >
             {i}
@@ -127,39 +123,6 @@ const ShopWithSidebar = () => {
     { label: "Latest Products", value: "0" },
     { label: "Best Selling", value: "1" },
     { label: "Old Products", value: "2" },
-  ];
-
-  const categories = [
-    {
-      name: "Desktop",
-      products: 10,
-      isRefined: true,
-    },
-    {
-      name: "Laptop",
-      products: 12,
-      isRefined: false,
-    },
-    {
-      name: "Monitor",
-      products: 30,
-      isRefined: false,
-    },
-    {
-      name: "UPS",
-      products: 23,
-      isRefined: false,
-    },
-    {
-      name: "Phone",
-      products: 10,
-      isRefined: false,
-    },
-    {
-      name: "Watch",
-      products: 13,
-      isRefined: false,
-    },
   ];
 
   const genders = [
@@ -230,6 +193,25 @@ const ShopWithSidebar = () => {
     }
     fetchProducts();
   }, [currentPage, sort, pageSize, selectedCategories, priceRange])
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/api/Category/Client', {
+          params: {
+            page: 1,
+            pageSize: 15,
+          },
+        });
+        if (response.data.success) {
+          setCategories(response.data.result.items);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <>
@@ -290,15 +272,6 @@ const ShopWithSidebar = () => {
 
                   {/* <!-- category box --> */}
                   <CategoryDropdown categories={categories} />
-
-                  {/* <!-- gender box --> */}
-                  <GenderDropdown genders={genders} />
-
-                  {/* // <!-- size box --> */}
-                  <SizeDropdown />
-
-                  {/* // <!-- color box --> */}
-                  <ColorsDropdwon />
 
                   {/* // <!-- price range box --> */}
                   <PriceDropdown />
