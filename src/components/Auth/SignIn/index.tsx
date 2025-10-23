@@ -12,7 +12,7 @@ const Signin = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const {setUser} = useAppContext();
+  const { setUser } = useAppContext();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');

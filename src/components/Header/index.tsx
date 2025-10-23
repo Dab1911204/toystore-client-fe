@@ -9,7 +9,7 @@ import { selectTotalPrice } from '@/redux/features/cart-slice';
 import { useCartModalContext } from '@/app/context/CartSidebarModalContext';
 import { useAppContext } from '@/app/context/AppContext';
 import Image from 'next/image';
-import { FaShoppingCart,FaSearch,FaUser  } from "react-icons/fa";
+import { FaShoppingCart, FaSearch, FaUser } from "react-icons/fa";
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -255,8 +255,8 @@ const Header = () => {
                                                 <Link
                                                     href={menuItem.path}
                                                     className={`hover:text-blue text-custom-lg font-medium text-white flex ${stickyMenu
-                                                            ? 'xl:py-4'
-                                                            : 'xl:py-6'
+                                                        ? 'xl:py-4'
+                                                        : 'xl:py-6'
                                                         }`}
                                                 >
                                                     {menuItem.title}
