@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../Common/Breadcrumb";
 import Image from "next/image";
 import Newsletter from "../Common/Newsletter";
@@ -19,77 +19,53 @@ const ShopDetails = () => {
 
   const [activeTab, setActiveTab] = useState("tabOne");
 
+  const [product, setProduct] = useState<any>(null); // ✅ lưu product vào state
+
+  const productFromRedux = useAppSelector(
+    (state) => state.productDetailsReducer.value
+  );
+
   const storages = [
-    {
-      id: "gb128",
-      title: "128 GB",
-    },
-    {
-      id: "gb256",
-      title: "256 GB",
-    },
-    {
-      id: "gb512",
-      title: "521 GB",
-    },
+    { id: "gb128", title: "128 GB" },
+    { id: "gb256", title: "256 GB" },
+    { id: "gb512", title: "512 GB" },
   ];
 
   const types = [
-    {
-      id: "active",
-      title: "Active",
-    },
-
-    {
-      id: "inactive",
-      title: "Inactive",
-    },
+    { id: "active", title: "Active" },
+    { id: "inactive", title: "Inactive" },
   ];
 
   const sims = [
-    {
-      id: "dual",
-      title: "Dual",
-    },
-
-    {
-      id: "e-sim",
-      title: "E Sim",
-    },
+    { id: "dual", title: "Dual" },
+    { id: "e-sim", title: "E Sim" },
   ];
 
   const tabs = [
-    {
-      id: "tabOne",
-      title: "Description",
-    },
-    {
-      id: "tabTwo",
-      title: "Additional Information",
-    },
-    {
-      id: "tabThree",
-      title: "Reviews",
-    },
+    { id: "tabOne", title: "Description" },
+    { id: "tabTwo", title: "Additional Information" },
+    { id: "tabThree", title: "Reviews" },
   ];
 
   const colors = ["red", "blue", "orange", "pink", "purple"];
 
-  const alreadyExist = localStorage.getItem("productDetails");
-  const productFromStorage = useAppSelector(
-    (state) => state.productDetailsReducer.value
-  );
-
-  const product = alreadyExist ? JSON.parse(alreadyExist) : productFromStorage;
-
+  //  Truy cập localStorage an toàn chỉ trên client
   useEffect(() => {
-    localStorage.setItem("productDetails", JSON.stringify(product));
-  }, [product]);
+    const stored = localStorage.getItem("productDetails");
+    const parsed = stored ? JSON.parse(stored) : productFromRedux;
 
-  // pass the product here when you get the real data.
+    if (parsed) {
+      setProduct(parsed);
+      localStorage.setItem("productDetails", JSON.stringify(parsed));
+    }
+  }, [productFromRedux]);
+
+  // Hàm mở modal xem trước
   const handlePreviewSlider = () => {
     openPreviewModal();
   };
+
+  if (!product) return <p>Loading product...</p>; // tránh lỗi khi chưa có dữ liệu
 
   console.log(product);
 
@@ -144,11 +120,10 @@ const ShopDetails = () => {
                       <button
                         onClick={() => setPreviewImg(key)}
                         key={key}
-                        className={`flex items-center justify-center w-15 sm:w-25 h-15 sm:h-25 overflow-hidden rounded-lg bg-gray-2 shadow-1 ease-out duration-200 border-2 hover:border-blue ${
-                          key === previewImg
-                            ? "border-blue"
-                            : "border-transparent"
-                        }`}
+                        className={`flex items-center justify-center w-15 sm:w-25 h-15 sm:h-25 overflow-hidden rounded-lg bg-gray-2 shadow-1 ease-out duration-200 border-2 hover:border-blue ${key === previewImg
+                          ? "border-blue"
+                          : "border-transparent"
+                          }`}
                       >
                         <Image
                           width={50}
@@ -395,9 +370,8 @@ const ShopDetails = () => {
                                   onChange={() => setActiveColor(color)}
                                 />
                                 <div
-                                  className={`flex items-center justify-center w-5.5 h-5.5 rounded-full ${
-                                    activeColor === color && "border"
-                                  }`}
+                                  className={`flex items-center justify-center w-5.5 h-5.5 rounded-full ${activeColor === color && "border"
+                                    }`}
                                   style={{ borderColor: `${color}` }}
                                 >
                                   <span
@@ -435,11 +409,10 @@ const ShopDetails = () => {
 
                                 {/*  */}
                                 <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${
-                                    storage === item.id
-                                      ? "border-blue bg-blue"
-                                      : "border-gray-4"
-                                  } `}
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${storage === item.id
+                                    ? "border-blue bg-blue"
+                                    : "border-gray-4"
+                                    } `}
                                 >
                                   <span
                                     className={
@@ -503,11 +476,10 @@ const ShopDetails = () => {
 
                                 {/*  */}
                                 <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${
-                                    type === item.id
-                                      ? "border-blue bg-blue"
-                                      : "border-gray-4"
-                                  } `}
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${type === item.id
+                                    ? "border-blue bg-blue"
+                                    : "border-gray-4"
+                                    } `}
                                 >
                                   <span
                                     className={
@@ -571,11 +543,10 @@ const ShopDetails = () => {
 
                                 {/*  */}
                                 <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${
-                                    sim === item.id
-                                      ? "border-blue bg-blue"
-                                      : "border-gray-4"
-                                  } `}
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${sim === item.id
+                                    ? "border-blue bg-blue"
+                                    : "border-gray-4"
+                                    } `}
                                 >
                                   <span
                                     className={
@@ -711,11 +682,10 @@ const ShopDetails = () => {
                   <button
                     key={key}
                     onClick={() => setActiveTab(item.id)}
-                    className={`font-medium lg:text-lg ease-out duration-200 hover:text-blue relative before:h-0.5 before:bg-blue before:absolute before:left-0 before:bottom-0 before:ease-out before:duration-200 hover:before:w-full ${
-                      activeTab === item.id
-                        ? "text-blue before:w-full"
-                        : "text-dark before:w-0"
-                    }`}
+                    className={`font-medium lg:text-lg ease-out duration-200 hover:text-blue relative before:h-0.5 before:bg-blue before:absolute before:left-0 before:bottom-0 before:ease-out before:duration-200 hover:before:w-full ${activeTab === item.id
+                      ? "text-blue before:w-full"
+                      : "text-dark before:w-0"
+                      }`}
                   >
                     {item.title}
                   </button>
@@ -727,9 +697,8 @@ const ShopDetails = () => {
               {/* <!-- tab content one start --> */}
               <div>
                 <div
-                  className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 ${
-                    activeTab === "tabOne" ? "flex" : "hidden"
-                  }`}
+                  className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 ${activeTab === "tabOne" ? "flex" : "hidden"
+                    }`}
                 >
                   <div className="max-w-[670px] w-full">
                     <h2 className="font-medium text-2xl text-dark mb-7">
@@ -780,9 +749,8 @@ const ShopDetails = () => {
               {/* <!-- tab content two start --> */}
               <div>
                 <div
-                  className={`rounded-xl bg-white shadow-1 p-4 sm:p-6 mt-10 ${
-                    activeTab === "tabTwo" ? "block" : "hidden"
-                  }`}
+                  className={`rounded-xl bg-white shadow-1 p-4 sm:p-6 mt-10 ${activeTab === "tabTwo" ? "block" : "hidden"
+                    }`}
                 >
                   {/* <!-- info item --> */}
                   <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
@@ -923,9 +891,8 @@ const ShopDetails = () => {
               {/* <!-- tab content three start --> */}
               <div>
                 <div
-                  className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 ${
-                    activeTab === "tabThree" ? "flex" : "hidden"
-                  }`}
+                  className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 ${activeTab === "tabThree" ? "flex" : "hidden"
+                    }`}
                 >
                   <div className="max-w-[570px] w-full">
                     <h2 className="font-medium text-2xl text-dark mb-9">

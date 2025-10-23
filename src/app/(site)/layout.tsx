@@ -16,42 +16,30 @@ import PreviewSliderModal from "@/components/Common/PreviewSlider";
 import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="vi" suppressHydrationWarning>
       <body>
-        {loading ? (
-          <PreLoader />
-        ) : (
-          <>
-            <ReduxProvider>
-              <CartModalProvider>
-                <ModalProvider>
-                  <PreviewSliderProvider>
-                    <Header />
-                    {children}
+        <ReduxProvider>
+          <ModalProvider>
+            <CartModalProvider>
+              <PreviewSliderProvider>
+                <PreLoader />
+                <Header />
 
-                    <QuickViewModal />
-                    <CartSidebarModal />
-                    <PreviewSliderModal />
-                  </PreviewSliderProvider>
-                </ModalProvider>
-              </CartModalProvider>
-            </ReduxProvider>
-            <ScrollToTop />
-            <Footer />
-          </>
-        )}
+                {children}
+
+                <Footer />
+                <ScrollToTop />
+
+                {/* Các modal toàn cục */}
+                <QuickViewModal />
+                <CartSidebarModal />
+                <PreviewSliderModal />
+              </PreviewSliderProvider>
+            </CartModalProvider>
+          </ModalProvider>
+        </ReduxProvider>
       </body>
     </html>
   );
