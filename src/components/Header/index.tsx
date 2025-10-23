@@ -9,8 +9,7 @@ import { selectTotalPrice } from '@/redux/features/cart-slice';
 import { useCartModalContext } from '@/app/context/CartSidebarModalContext';
 import { useAppContext } from '@/app/context/AppContext';
 import Image from 'next/image';
-import { FaSearch,FaRegUser } from "react-icons/fa";
-import { MdOutlineShoppingCart } from "react-icons/md"; // Import các SVG components
+import { FaShoppingCart,FaSearch,FaUser  } from "react-icons/fa";
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -66,16 +65,14 @@ const Header = () => {
 
     return (
         <header
-            className={`fixed left-0 top-0 w-full z-9999 bg-[#AFDDFF] transition-transform ease-in-out duration-300 ${
-                isVisible ? 'translate-y-0' : '-translate-y-full'
-            } ${stickyMenu ? 'shadow' : ''}`}
+            className={`fixed left-0 top-0 w-full z-9999 bg-[#AFDDFF] transition-transform ease-in-out duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+                } ${stickyMenu ? 'shadow' : ''}`}
         >
             <div className="max-w-[1170px] mx-auto px-4 sm:px-7.5 xl:px-0">
                 {/* Header top start */}
                 <div
-                    className={`flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 ease-out duration-200 ${
-                        stickyMenu ? 'py-2' : 'py-3'
-                    }`}
+                    className={`flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 ease-out duration-200 ${stickyMenu ? 'py-2' : 'py-3'
+                        }`}
                 >
                     {/* First row on mobile, Left side on desktop: Logo */}
                     <Link className="flex-shrink-0" href="/">
@@ -128,7 +125,7 @@ const Header = () => {
                                     }
                                     className="flex items-center gap-2 hover:text-blue transition-colors"
                                 >
-                                    <FaRegUser />
+                                    <FaUser />
                                     <span className="hidden sm:inline text-sm font-medium">
                                         {getFirstName(user?.fullName)}
                                     </span>
@@ -169,7 +166,7 @@ const Header = () => {
                                 href="/signin"
                                 className="flex items-center gap-2 hover:text-blue transition-colors"
                             >
-                                <FaRegUser />
+                                <FaUser />
                                 <span className="hidden sm:inline text-sm font-medium">
                                     Đăng nhập
                                 </span>
@@ -182,7 +179,7 @@ const Header = () => {
                             className="flex items-center gap-2.5"
                         >
                             <span className="inline-block relative">
-                                <MdOutlineShoppingCart />
+                                <FaShoppingCart />
                                 <span className="flex items-center justify-center font-medium text-2xs absolute -right-2 -top-2.5 bg-blue w-4.5 h-4.5 rounded-full text-white">
                                     {product.length}
                                 </span>
@@ -199,35 +196,30 @@ const Header = () => {
                             <span className="block relative cursor-pointer w-5.5 h-5.5">
                                 <span className="du-block absolute right-0 w-full h-full">
                                     <span
-                                        className={`block relative top-0 left-0 bg-dark rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-[0] ${
-                                            !navigationOpen &&
+                                        className={`block relative top-0 left-0 bg-dark rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-[0] ${!navigationOpen &&
                                             '!w-full delay-300'
-                                        }`}
+                                            }`}
                                     ></span>
                                     <span
-                                        className={`block relative top-0 left-0 bg-dark rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-150 ${
-                                            !navigationOpen &&
+                                        className={`block relative top-0 left-0 bg-dark rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-150 ${!navigationOpen &&
                                             '!w-full delay-400'
-                                        }`}
+                                            }`}
                                     ></span>
                                     <span
-                                        className={`block relative top-0 left-0 bg-dark rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-200 ${
-                                            !navigationOpen &&
+                                        className={`block relative top-0 left-0 bg-dark rounded-sm w-0 h-0.5 my-1 ease-in-out duration-200 delay-200 ${!navigationOpen &&
                                             '!w-full delay-500'
-                                        }`}
+                                            }`}
                                     ></span>
                                 </span>
 
                                 <span className="block absolute right-0 w-full h-full rotate-45">
                                     <span
-                                        className={`block bg-dark rounded-sm ease-in-out duration-200 delay-300 absolute left-2.5 top-0 w-0.5 h-full ${
-                                            !navigationOpen && '!h-0 delay-[0] '
-                                        }`}
+                                        className={`block bg-dark rounded-sm ease-in-out duration-200 delay-300 absolute left-2.5 top-0 w-0.5 h-full ${!navigationOpen && '!h-0 delay-[0] '
+                                            }`}
                                     ></span>
                                     <span
-                                        className={`block bg-dark rounded-sm ease-in-out duration-200 delay-400 absolute left-0 top-2.5 w-full h-0.5 ${
-                                            !navigationOpen && '!h-0 dealy-200'
-                                        }`}
+                                        className={`block bg-dark rounded-sm ease-in-out duration-200 delay-400 absolute left-0 top-2.5 w-full h-0.5 ${!navigationOpen && '!h-0 dealy-200'
+                                            }`}
                                     ></span>
                                 </span>
                             </span>
@@ -241,10 +233,9 @@ const Header = () => {
                     <div className="flex items-center justify-between">
                         {/* <!--=== Main Nav Start ===--> */}
                         <div
-                            className={`w-[288px] absolute right-4 top-full xl:static xl:w-auto h-0 xl:h-auto invisible xl:visible xl:flex items-center justify-between ${
-                                navigationOpen &&
+                            className={`w-[288px] absolute right-4 top-full xl:static xl:w-auto h-0 xl:h-auto invisible xl:visible xl:flex items-center justify-between ${navigationOpen &&
                                 `!visible bg-[#61b5ff] shadow-lg border border-gray-3 !h-auto max-h-[400px] overflow-y-scroll rounded-md p-5`
-                            }`}
+                                }`}
                         >
                             {/* <!-- Main Nav Start --> */}
                             <nav>
@@ -263,11 +254,10 @@ const Header = () => {
                                             >
                                                 <Link
                                                     href={menuItem.path}
-                                                    className={`hover:text-blue text-custom-lg font-medium text-white flex ${
-                                                        stickyMenu
+                                                    className={`hover:text-blue text-custom-lg font-medium text-white flex ${stickyMenu
                                                             ? 'xl:py-4'
                                                             : 'xl:py-6'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {menuItem.title}
                                                 </Link>
