@@ -1,22 +1,16 @@
 
 "use client";
 import React from "react";
-import { useModalContext } from "@/app/context/QuickViewModalContext";
 import Link from "next/link";
 import Image from "next/image";
 import { formatCurrency } from "@/utils/format";
 import { addCart } from "@/utils/cart";
+import { useRouter } from "next/navigation";
 
 const SingleGridItem = ({ item }: { item: any }) => {
-  const { openModal } = useModalContext();
-
-  // update the QuickView state
-  const handleQuickViewUpdate = () => { };
-
+  const router = useRouter()
   // add to cart
   const handleAddToCart = async () => {await addCart(item.id, 1)};
-
-  const handleItemToWishList = () => { };
 
   const discountPercentage = item?.promotion?.discountPercent ? item.promotion.discountPercent : 0;
 
@@ -41,8 +35,7 @@ const SingleGridItem = ({ item }: { item: any }) => {
         <div className="absolute left-0 bottom-0 translate-y-full w-full flex items-center justify-center gap-2.5 pb-5 ease-linear duration-200 group-hover:translate-y-0">
           <button
             onClick={() => {
-              openModal();
-              handleQuickViewUpdate();
+              router.push(`/shop-details/${item.slug}`)
             }}
             aria-label="button for quick view"
             className="flex items-center justify-center w-9 h-9 rounded-[5px] shadow-1 ease-out duration-200 text-dark bg-white hover:text-blue"
@@ -84,7 +77,6 @@ const SingleGridItem = ({ item }: { item: any }) => {
           </button>
 
           <button
-            onClick={() => handleItemToWishList()}
             aria-label="button for favorite select"
             className="flex items-center justify-center w-9 h-9 rounded-[5px] shadow-1 ease-out duration-200 text-dark bg-white hover:text-blue"
           >

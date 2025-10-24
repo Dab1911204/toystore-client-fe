@@ -10,7 +10,7 @@ type Menu = {
 export const menuData: Menu[] = [
   {
     id: 1,
-    title: 'Hàng mới',
+    title: 'Trang chủ',
     newTab: false,
     path: '/',
   },
@@ -21,18 +21,6 @@ export const menuData: Menu[] = [
     path: '/shop-with-sidebar',
   },
   {
-    id: 3,
-    title: 'Thương hiệu',
-    newTab: false,
-    path: '/shop-details',
-  },
-  {
-    id: 4,
-    title: 'Liên hệ',
-    newTab: false,
-    path: '/contact',
-  },
-  {
     id: 6,
     title: 'pages',
     newTab: false,
@@ -40,27 +28,15 @@ export const menuData: Menu[] = [
     submenu: [
       {
         id: 61,
-        title: 'Shop With Sidebar',
+        title: 'Sản phẩm',
         newTab: false,
         path: '/shop-with-sidebar',
       },
       {
-        id: 64,
-        title: 'Checkout',
-        newTab: false,
-        path: '/checkout',
-      },
-      {
         id: 65,
-        title: 'Cart',
+        title: 'Giỏ hàng',
         newTab: false,
         path: '/cart',
-      },
-      {
-        id: 66,
-        title: 'Wishlist',
-        newTab: false,
-        path: '/wishlist',
       },
       {
         id: 67,
@@ -70,34 +46,15 @@ export const menuData: Menu[] = [
       },
       {
         id: 68,
-        title: 'Sign up',
-        newTab: false,
-        path: '/signup',
-      },
-      {
-        id: 69,
-        title: 'My Account',
+        title: 'Tài khoản cá nhân',
         newTab: false,
         path: '/my-account',
-      },
-      {
-        id: 70,
-        title: 'Contact',
+      }, {
+        id: 69,
+        title: 'Cẩm nang',
         newTab: false,
-        path: '/contact',
-      },
-      {
-        id: 62,
-        title: 'Error',
-        newTab: false,
-        path: '/error',
-      },
-      {
-        id: 63,
-        title: 'Mail Success',
-        newTab: false,
-        path: '/mail-success',
-      },
+        path: '/blogs/blog-grid-with-sidebar',
+      }
     ],
   },
   {

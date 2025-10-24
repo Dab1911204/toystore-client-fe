@@ -1,8 +1,6 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useCallback, useRef, useEffect, useState } from "react";
-import data from "./categoryData";
-import Image from "next/image";
 
 // Import Swiper styles
 import "swiper/css/navigation";
@@ -14,7 +12,6 @@ import { categoryService } from "@/services/category";
 const Categories = () => {
   const sliderRef = useRef(null);
   const [listCategory, setListCategory] = useState<any[]>([]);
-  const [toTalCategory, settoTalCategory] = useState<any>(0);
 
   const handlePrev = useCallback(() => {
     if (!sliderRef.current) return;
@@ -35,7 +32,6 @@ const Categories = () => {
   const fecthData = async () => {
     const getListCategory = await categoryService.getListCategory('/api/Category/Client');
     setListCategory(getListCategory.result.items);
-    settoTalCategory(getListCategory.result.totalCount)
   }
 
   useEffect(() => {
@@ -84,11 +80,8 @@ const Categories = () => {
                     </clipPath>
                   </defs>
                 </svg>
-                Categories
+                Danh mục
               </span>
-              <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-                Browse by Category
-              </h2>
             </div>
 
             <div className="flex items-center gap-3">

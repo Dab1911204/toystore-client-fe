@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import OrderActions from "./OrderActions";
 import OrderModal from "./OrderModal";
+import { formatCurrency, formatDateTime } from "@/utils/format";
 
 const SingleOrder = ({ orderItem, smallView }: any) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-
+  const status = [ "Chờ xác nhận","Đã xác nhận","Đang giao","Hoàn thành","Đã hủy"]
+  console.log(orderItem);
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
@@ -24,27 +26,31 @@ const SingleOrder = ({ orderItem, smallView }: any) => {
       {!smallView && (
         <div className="items-center justify-between border-t border-gray-3 py-5 px-7.5 hidden md:flex">
           <div className="min-w-[175px]">
-            <p className="text-custom-sm text-dark">{orderItem.createdAt}</p>
+            <p className="text-custom-sm text-dark">{formatDateTime(orderItem.orderDate)}</p>
           </div>
 
           <div className="min-w-[128px]">
             <p
-              className={`inline-block text-custom-sm  py-0.5 px-2.5 rounded-[30px] capitalize ${
-                orderItem.status === "delivered"
-                  ? "text-green bg-green-light-6"
-                  : orderItem.status === "on-hold"
-                  ? "text-red bg-red-light-6"
-                  : orderItem.status === "processing"
+              className={`inline-block text-custom-sm  py-0.5 rounded-[30px] capitalize 
+                ${orderItem.orderStatus == 0
                   ? "text-yellow bg-yellow-light-4"
-                  : "Unknown Status"
-              }`}
+                  : orderItem.orderStatus == 1
+                    ? "text-purple bg-purple-light-6"
+                    : orderItem.orderStatus == 2
+                      ? "text-blue bg-blue-light-6"
+                      : orderItem.orderStatus == 3
+                        ? "text-green bg-green-light-6"
+                        : orderItem.orderStatus == 4
+                          ? "text-red bg-red-light-6"
+                          : "Unknown Status"
+                }`}
             >
-              {orderItem.status}
+              {status[orderItem.orderStatus]}
             </p>
           </div>
 
           <div className="min-w-[113px]">
-            <p className="text-custom-sm text-dark">{orderItem.total}</p>
+            <p className="text-custom-sm text-dark">{formatCurrency(orderItem.totalPrice)}</p>
           </div>
 
           <div className="flex gap-5 items-center">
@@ -61,14 +67,8 @@ const SingleOrder = ({ orderItem, smallView }: any) => {
           <div className="py-4.5 px-7.5">
             <div className="">
               <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2"> Order:</span> #
-                {orderItem.orderId.slice(-8)}
-              </p>
-            </div>
-            <div className="">
-              <p className="text-custom-sm text-dark">
                 <span className="font-bold pr-2">Date:</span>{" "}
-                {orderItem.createdAt}
+                {orderItem.orderDate}
               </p>
             </div>
 
@@ -76,40 +76,37 @@ const SingleOrder = ({ orderItem, smallView }: any) => {
               <p className="text-custom-sm text-dark">
                 <span className="font-bold pr-2">Status:</span>{" "}
                 <span
-                  className={`inline-block text-custom-sm  py-0.5 px-2.5 rounded-[30px] capitalize ${
-                    orderItem.status === "delivered"
-                      ? "text-green bg-green-light-6"
-                      : orderItem.status === "on-hold"
-                      ? "text-red bg-red-light-6"
-                      : orderItem.status === "processing"
+                  className={`inline-block text-custom-sm  py-0.5 px-2.5 rounded-[30px] capitalize ${orderItem.orderStatus === 0
                       ? "text-yellow bg-yellow-light-4"
-                      : "Unknown Status"
-                  }`}
+                      : orderItem.orderStatus === 1
+                        ? "text-purple bg-purple-light-6"
+                        : orderItem.orderStatus === 2
+                          ? "text-blue bg-blue-light-6"
+                          : orderItem.orderStatus === 3
+                            ? "text-green bg-green-light-6"
+                            : orderItem.orderStatus === 4
+                              ? "text-red bg-red-light-6"
+                              : "Unknown Status"
+                    }`}
                 >
-                  {orderItem.status}
+                  {orderItem.orderStatus}
                 </span>
               </p>
             </div>
 
             <div className="">
               <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2">Title:</span> {orderItem.title}
-              </p>
-            </div>
-
-            <div className="">
-              <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2">Total:</span> $
-                {orderItem.total}
+                <span className="font-bold pr-2">Total:</span>
+                {formatCurrency(orderItem.totalPrice)}
               </p>
             </div>
 
             <div className="">
               <p className="text-custom-sm text-dark flex items-center">
-                <span className="font-bold pr-2">Actions:</span>{" "}
+                <span className="font-bold pr-2">Hoạt động:</span>{" "}
                 <OrderActions
                   toggleDetails={toggleDetails}
-                  toggleEdit={toggleEdit}
+                  toggleCancel={toggleEdit}
                 />
               </p>
             </div>

@@ -219,7 +219,7 @@ const ShopWithSidebar = () => {
           params.append('SortBy', sort);       // dùng trực tiếp chuỗi 'CreateOn'
           params.append('SortAsc', 'true');    // hoặc 'false' nếu muốn giảm dần
         }
-
+        console.log("Danh mục:"+selectedCategories)
         // Category filter
         selectedCategories.forEach(catId => params.append('CategoryIds', catId));
 
@@ -249,8 +249,6 @@ const ShopWithSidebar = () => {
       }
     }
     fetchProducts();
-  }, [currentPage, sort, pageSize, selectedCategories, priceRange])
-  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await categoryService.getListCategory('/api/Category/Client?pageSize=10000');
@@ -262,8 +260,8 @@ const ShopWithSidebar = () => {
       }
     };
 
-    fetchCategories();
-  }, []);
+    fetchCategories()
+  }, [currentPage, sort, pageSize, selectedCategories, priceRange])
 
   if (loading) {
     return (
