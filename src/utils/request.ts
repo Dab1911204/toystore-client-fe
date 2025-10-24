@@ -99,6 +99,8 @@ const request = async <T>(
   const isFormData = data instanceof FormData
   const baseUrl = options?.baseUrl ?? API_DOMAIN
   const url = `${baseUrl.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`
+  console.log(url)
+
 
   const fetchOptions: RequestInit = {
     ...options,

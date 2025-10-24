@@ -4,12 +4,11 @@ import Link from 'next/link';
 import { menuData } from './menuData';
 import Dropdown from './Dropdown'
 import { toast, Slide } from 'react-toastify';
-import { useCartModalContext } from '@/app/context/CartSidebarModalContext';
 import { useAppContext } from '@/app/context/AppContext';
 import Image from 'next/image';
 import { FaShoppingCart, FaSearch, FaUser } from "react-icons/fa";
-import { CartService } from '@/services/CartServices';
 import { AuthService } from '@/services/authServices';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -18,11 +17,11 @@ const Header = () => {
     const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
     const [showUserMenu, setShowUserMenu] = useState(false);
-    const { openCartModal } = useCartModalContext();
     const { user, logout, isAuthenticated } = useAppContext();
+    const router = useRouter();
 
     const handleOpenCartModal = () => {
-        openCartModal();
+        router.push('/cart');
     };
     const handleLogout = async () => {
         await AuthService.logout();

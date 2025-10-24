@@ -43,10 +43,6 @@ const SingleOrder = ({ orderItem, smallView }: any) => {
             </p>
           </div>
 
-          <div className="min-w-[213px]">
-            <p className="text-custom-sm text-dark">{orderItem.title}</p>
-          </div>
-
           <div className="min-w-[113px]">
             <p className="text-custom-sm text-dark">{orderItem.total}</p>
           </div>

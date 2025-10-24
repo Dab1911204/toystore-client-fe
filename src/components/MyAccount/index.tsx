@@ -4,6 +4,7 @@ import Breadcrumb from "../Common/Breadcrumb";
 import AddressModal from "./AddressModal";
 import Orders from "../Orders";
 import { accountService } from "@/services/my-account";
+import { Slide, toast } from "react-toastify";
 
 const MyAccount = () => {
   const [activeTab, setActiveTab] = useState("account-details");
@@ -32,9 +33,7 @@ const MyAccount = () => {
   const [myAccount, setMyAccount] = useState<any>(null);
 
   const fecthData = async () => {
-    const getAccount = await accountService.getAccount('/api/Auth/get-profile');
-
-
+    const getAccount = await accountService.getAccount('/api/Auth/get-profile')
     // Gán dữ liệu vào state input
     if (getAccount) {
       setFullName(getAccount.result.fullName);
@@ -52,8 +51,6 @@ const MyAccount = () => {
     fecthData();
   }, []);
 
-  console.log("tài khoản", myAccount)
-
 
   // Change thong tin
 
@@ -70,15 +67,34 @@ const MyAccount = () => {
 
     // Tạo FormData
     const formData = new FormData();
-    console.log("tài khoản id", id)
     for (const key in updatedData) {
       formData.append(key, updatedData[key]);
     }
     try {
       await accountService.updateAccount(id, formData);
-      alert("Profile updated successfully!");
+      toast.success("Cập nhật thành công!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
     } catch {
-      alert("Profile updated error!");
+      toast.error("Cập nhật thất bại!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
     }
 
 
@@ -105,7 +121,6 @@ const MyAccount = () => {
     try {
       // Gọi API
       await accountService.updatePassword(updatePassword);
-
       // Nếu thành công
       alert("Password updated successfully!");
       setOldPassword("");
@@ -222,7 +237,7 @@ const MyAccount = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div
                 className={`xl:max-w-[770px] w-full bg-white rounded-xl shadow-1 ${activeTab === "orders" ? "block" : "hidden"
                   }`}
@@ -245,7 +260,7 @@ const MyAccount = () => {
                         name="fullName"
                         id="fullName"
                         placeholder={fullName}
-                        value={fullName}
+                        value={fullName ||""}
                         onChange={(e) => setFullName(e.target.value)}
                         className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                       />
@@ -259,7 +274,7 @@ const MyAccount = () => {
                       name="email"
                       id="email"
                       placeholder={email}
-                      value={email}
+                      value={email|| ""}
                       onChange={(e) => setEmail(e.target.value)}
                       className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                     />
@@ -272,7 +287,7 @@ const MyAccount = () => {
                       name="address"
                       id="address"
                       placeholder={address}
-                      value={address}
+                      value={address || ""}
                       onChange={(e) => setAddress(e.target.value)}
                       className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                     />
@@ -285,7 +300,7 @@ const MyAccount = () => {
                       name="phoneNumber"
                       id="phoneNumber"
                       placeholder={phoneNumber}
-                      value={phoneNumber}
+                      value={phoneNumber || ""}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                     />
