@@ -21,11 +21,7 @@ const CustomerInfo = () => {
         // Xử lý dữ liệu form ở đây, ví dụ gửi API hoặc lưu state
         console.log("Thông tin khách hàng:", formData);
         try {
-            const data = new FormData();
-            for (const key in formData) {
-                data.append(key, formData[key]);
-            }
-            const res = await OrderService.createOrder(data)
+            const res = await OrderService.createOrder(formData)
             console.log(res)
             if (res.success) {
                 toast.success("Đặt hàng thành công!", {
