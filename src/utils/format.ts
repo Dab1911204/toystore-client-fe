@@ -23,3 +23,17 @@ export function formatCurrency(amount: number, locale: string = "vi-VN"): string
     maximumFractionDigits: 0
   }).format(amount);
 }
+
+export function formatDateTime(
+  isoString: string,
+  locale: string = "vi-VN",
+  timeZone: string = "Asia/Ho_Chi_Minh"
+): string {
+  const date = new Date(isoString);
+
+  return date.toLocaleString(locale, {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}

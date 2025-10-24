@@ -48,11 +48,8 @@ const NewArrival = () => {
                   strokeLinecap="round"
                 />
               </svg>
-              This Week’s
+              Sản phẩm mới
             </span>
-            <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-              New Arrivals
-            </h2>
           </div>
 
           <Link

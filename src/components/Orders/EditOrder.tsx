@@ -1,45 +1,60 @@
-import React, { useState } from "react";
-import toast from "react-hot-toast";
+import { OrderService } from "@/services/orderServices";
+import React from "react";
+import { Slide, toast } from "react-toastify";
 
 const EditOrder = ({ order, toggleModal }: any) => {
-  const [currentStatus, setCurrentStatus] = useState(order?.status);
-  const handleChanege = (e: any) => {
-    setCurrentStatus(e.target.value);
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-
-    if (!currentStatus) {
-      toast.error("Please select a status");
-      return;
+  const handleCancelOrder = async () => {
+    try {
+      const res = await OrderService.cancelOrder(order.id)
+      if (res.success) {
+        toast.success("Hủy đơn hàng thành công!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Slide,
+        });
+      }
+    } catch (error) {
+      toast.error("Chỉ có thể hủy đơn hàng khi ở trạng thái chờ xác nhận!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
+    } finally {
+      toggleModal(false);
     }
-
-    toggleModal(false);
   };
 
   return (
-    <div className="w-full px-10">
-      <p className="pb-2 font-medium text-dark">Order Status</p>
-      <div className="w-full">
-        <select
-          className="w-full rounded-[10px] border border-gray-3 bg-gray-1 text-dark py-3.5 px-5 text-custom-sm"
-          name="status"
-          id="status"
-          required
-          onChange={handleChanege}
+    <div className="w-full px-10 py-8 text-center">
+      <p className="text-lg font-semibold text-dark mb-6">
+        Bạn có chắc muốn hủy đơn hàng này không?
+      </p>
+
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={handleCancelOrder}
+          className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-all bg-red"
         >
-          <option value="processing">Processing</option>
-          <option value="on-hold">On Hold</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
+          Xác nhận
+        </button>
 
         <button
-          className="mt-5 w-full rounded-[10px] border border-blue-1 bg-blue-1 text-white py-3.5 px-5 text-custom-sm bg-blue"
-          onClick={handleSubmit}
+          onClick={() => toggleModal(false)}
+          className="px-6 py-3 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-medium transition-all"
         >
-          Save Changes
+          Hủy bỏ
         </button>
       </div>
     </div>

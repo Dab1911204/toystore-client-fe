@@ -1,19 +1,16 @@
 "use client";
 import React from "react";
-import { useModalContext } from "@/app/context/QuickViewModalContext";
 import Link from "next/link";
 import Image from "next/image";
 import { formatCurrency } from "@/utils/format"; // nếu bạn đã có utils format
 import { addCart } from "@/utils/cart";
+import { useRouter } from "next/navigation";
 
 const SingleListItem = ({ item }: { item: any }) => {
-  const { openModal } = useModalContext();
-
-  const handleQuickViewUpdate = () => { };
+  const router = useRouter()
   const handleAddToCart = async () => {
     await addCart(item.id, 1)
   };
-  const handleItemToWishList = () => { };
 
   // Tính % giảm giá nếu có
   const discountPercentage = item?.promotion?.discountPercent ? item.promotion.discountPercent : 0;
@@ -69,8 +66,7 @@ const SingleListItem = ({ item }: { item: any }) => {
         <div className="flex items-center gap-3 mt-3">
           <button
             onClick={() => {
-              openModal();
-              handleQuickViewUpdate();
+              router.push(`/shop-details/${item.slug}`)
             }}
             aria-label="Quick View"
             className="flex items-center justify-center w-9 h-9 rounded-[5px] shadow-1 text-dark bg-white hover:text-blue transition"
@@ -111,7 +107,6 @@ const SingleListItem = ({ item }: { item: any }) => {
           </button>
 
           <button
-            onClick={handleItemToWishList}
             aria-label="Wishlist"
             className="flex items-center justify-center w-9 h-9 rounded-[5px] shadow-1 text-dark bg-white hover:text-blue transition"
           >

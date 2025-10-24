@@ -1,5 +1,6 @@
 import envConfig from "@/config/envConfig"
 import { redirect } from "next/navigation"
+import { fa } from "zod/v4/locales"
 
 type BodyType = Record<string, any> | FormData
 
@@ -65,7 +66,7 @@ const request = async <T>(
   path: string,
   options?: CustomOption
 ): Promise<T> => {
-  const requireAuth = options?.requireAuth ?? true
+  const requireAuth = options?.requireAuth ?? false
   const requireManager = options?.requireManager ?? false
 
   // --- Client vs Server ---
